@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>ආද❤️ණීය ගණිතය පන්තිය</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="pic2.jpg" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="styles.css" rel="stylesheet" />
+        <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Firebase App (the core Firebase SDK) -->
+        <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+        <!-- Firebase Auth -->
+        <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-auth-compat.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+       
+    </head>
+    <body class="d-flex flex-column h-100 bg-light">
+        <main class="flex-shrink-0">
+           <!-- Navigation-->
+           <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+            <div class="container px-5">
+                <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">ආද❤️ණීය ගණිතය පන්තිය</span></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="service.html">Service</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                        <button type="button" class="btn btn-outline-primary" id="courseBtn">Courses</button>
+                        <button type="button" class="btn btn-outline-primary" id="rec">Recordings</button>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+            <!-- Page Content-->
+            <div class="container px-5 my-5">
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Log in</span></h1>
+                </div>
+                <div class="row gx-5 justify-content-center">
+                    <div class="col-lg-11 col-xl-9 col-xxl-8">
+
+                        <div class="container mx-auto max-w-lg p-4 sm:p-6 lg:p-8">
+                            <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
+                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">Log In</h2>
+                              <form id="login-form" class="space-y-4">
+                                <div>
+                                  <label class="block text-sm font-medium text-gray-700">Email</label>
+                                  <input type="email" id="email" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                                </div>
+                                <div>
+                                  <label class="block text-sm font-medium text-gray-700">Password</label>
+                                  <input type="password" id="password" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200" id="log">
+                                  Log In
+                                </button><br>
+                                <br><a href="https://forms.gle/DhSjAM4CR2kmM5ur9">Register?</a>
+                              </form>
+                              <p id="error-message" class="mt-4 text-red-500 text-sm text-center hidden"></p>
+                            </div>
+                          </div>
+                          
+             <!-- Free Courses-->    
+
+
+                        
+                        
+                            
+        <!-- Footer-->
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0"> &copy; ආද❤️ණීය ගණිතය පන්තිය 2025</div></div>
+                    <div class="col-auto">
+                        
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script>
+          // You (the developer) define allowed credentials here
+          const allowedUsers = {
+            "sadaresvishmika@gmail.com": "Wishwa@2008",
+            "malindak813@gmail.com": "malin@813",
+            "anotheruser@example.com": "yourpassword"
+           
+          };
+        
+          document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+        
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+        
+            if (allowedUsers[email] && allowedUsers[email] === password) {
+              alert("Login successful!");
+              window.location.href = "cose.html";
+            } else {
+              alert("Incorrect credentials");
+        
+              const errorMsg = document.getElementById('error-message');
+              errorMsg.textContent = "Invalid email or password";
+              errorMsg.classList.remove('hidden');
+            }
+          });
+
+          document.getElementById('rec').addEventListener('click', function() {
+    window.location.href = 'record.html'; // Replace with your page URL
+  });
+        </script>
+        
+        
+          <!-- Bootstrap core JS (with Popper included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    </body>
+</html>
