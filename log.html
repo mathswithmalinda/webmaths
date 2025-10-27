@@ -56,19 +56,28 @@
                             <div class="bg-white rounded-2xl shadow-lg p-6 sm:p-8">
                               <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">Log In</h2>
                               <form id="login-form" class="space-y-4">
-                                <div>
-                                  <label class="block text-sm font-medium text-gray-700">Email</label>
-                                  <input type="email" id="email" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                                </div>
-                                <div>
-                                  <label class="block text-sm font-medium text-gray-700">Password</label>
-                                  <input type="password" id="password" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
-                                </div>
-                                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200" id="log">
-                                  Log In
-                                </button><br>
-                                <br><a href="https://forms.gle/DhSjAM4CR2kmM5ur9">Register?</a>
-                              </form>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Name</label>
+    <input type="text" id="studentName" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Student ID</label>
+    <input type="text" id="studentId" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+  </div>
+  <div>
+    <label class="block text-sm font-medium text-gray-700">Passcode</label>
+    <input type="password" id="passcode" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required />
+  </div>
+
+  <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200" id="log">
+    Log In
+  </button>
+  <br><br>
+  <a href="https://forms.gle/DhSjAM4CR2kmM5ur9">Register?</a>
+</form>
+
+<p id="error-message" class="text-red-600 mt-2 hidden"></p>
+
                               <p id="error-message" class="mt-4 text-red-500 text-sm text-center hidden"></p>
                             </div>
                           </div>
@@ -94,36 +103,36 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script>
-          // You (the developer) define allowed credentials here
-          const allowedUsers = {
-            "sadaresvishmika@gmail.com": "Wishwa@2008",
-            "malindak813@gmail.com": "malin@813",
-            "anotheruser@example.com": "yourpassword"
-           
-          };
-        
-          document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-        
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-        
-            if (allowedUsers[email] && allowedUsers[email] === password) {
-              alert("Login successful!");
-              window.location.href = "cose.html";
-            } else {
-              alert("Incorrect credentials");
-        
-              const errorMsg = document.getElementById('error-message');
-              errorMsg.textContent = "Invalid email or password";
-              errorMsg.classList.remove('hidden');
-            }
-          });
+  const allowedStudents = {
+    "T1156": { passcode: "1234", page: "grade11.html" },
+    "T1157": { passcode: "1234", page: "grade11.html" },
+    "T1056": { passcode: "1234", page: "grade10.html" },
+    "T0956": { passcode: "1234", page: "grade9.html" },
+    "T0856": { passcode: "1234", page: "grade8.html" },
+    "T0756": { passcode: "1234", page: "grade7.html" },
+    "T0656": { passcode: "1234", page: "grade6.html" }
+  };
 
-          document.getElementById('rec').addEventListener('click', function() {
-    window.location.href = 'record.html'; // Replace with your page URL
+  document.getElementById('login-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('studentName').value.trim();
+    const id = document.getElementById('studentId').value.trim().toUpperCase();
+    const passcode = document.getElementById('passcode').value.trim();
+    const errorMsg = document.getElementById('error-message');
+
+    if (allowedStudents[id] && allowedStudents[id].passcode === passcode) {
+      // Save the student's name to localStorage
+      localStorage.setItem("studentName", name);
+      alert("Login successful!");
+      window.location.href = allowedStudents[id].page;
+    } else {
+      errorMsg.textContent = "Invalid Student ID or Passcode";
+      errorMsg.classList.remove('hidden');
+    }
   });
-        </script>
+</script>
+
         
         
           <!-- Bootstrap core JS (with Popper included) -->
