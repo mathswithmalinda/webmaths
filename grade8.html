@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>ආද❤️ණීය ගණිතය පන්තිය</title>
+    <link rel="icon" type="image/x-icon" href="pic2.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet" />
+    <style>
+      body.dark-mode {
+        background-color: #121212 !important;
+        color: #ffffff !important;
+      }
+      .dark-mode .card {
+        background-color: #1e1e1e !important;
+        color: #ffffff !important;
+      }
+      .dark-mode .btn-outline-primary {
+        border-color: #ffffff !important;
+        color: #ffffff !important;
+      }
+      .dark-mode .btn-outline-primary:hover {
+        background-color: #ffffff !important;
+        color: #000 !important;
+      }
+      /* Bottom-right fixed dark mode toggle */
+      #darkModeToggle {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+
+  <body class="d-flex flex-column h-100 bg-light">
+    <main class="flex-shrink-0">
+      <!-- Navigation-->
+      <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+        <div class="container px-5">
+          <a class="navbar-brand" href="#"><span class="fw-bolder text-primary">ආද❤️ණීය ගණිතය පන්තිය</span></a>
+          <div class="collapse navbar-collapse show" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+              <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="service.html">Service</a></li>
+              <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+              <button type="button" class="btn btn-outline-primary" id="courseBtn">Courses</button>
+              <button type="button" class="btn btn-outline-primary" id="rec">Recordings</button>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <section class="py-5">
+        <div class="container px-5 mb-5 text-center">
+          <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Grade 08</span></h1>
+          <h1 class="display-5 fw-bolder mb-4"><span class="text-gradient d-inline">Recordings</span></h1>
+          <h3 id="welcome-message" class="text-primary mt-3 mb-4"></h3>
+
+          <!-- Toggle Buttons -->
+          <button id="toggleLiveBtn" class="btn btn-primary mb-4">Go to Live Classes</button>
+          <button id="toggleRecBtn" class="btn btn-secondary mb-4" style="display:none;">Go Back to Recordings</button>
+
+          <!-- Recordings Section -->
+          <div id="recordingsSection">
+            <div class="card overflow-hidden shadow rounded-4 border-0 mb-4">
+              <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                  <div class="p-5">
+                    <h2 class="fw-bolder">Day 01 Recording</h2><br>
+                  </div>
+                </div>
+                <center><button type="button" class="btn btn-outline-primary" id="g81">View Video</button></center>
+                <br>
+              </div>
+            </div>
+
+            <div class="card overflow-hidden shadow rounded-4 border-0 mb-4">
+              <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                  <div class="p-5">
+                    <h2 class="fw-bolder">Day 02 Recording</h2>
+                  </div>
+                </div>
+                <center><button type="button" class="btn btn-outline-primary" id="g82">View Video</button></center>
+                <br>
+              </div>
+            </div>
+
+            <div class="card overflow-hidden shadow rounded-4 border-0 mb-4">
+              <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                  <div class="p-5">
+                    <h2 class="fw-bolder">Day 03 Recording</h2><br>
+                  </div>
+                </div>
+                <center><button type="button" class="btn btn-outline-primary" id="g83">View Video</button></center>
+                <br>
+              </div>
+            </div>
+
+            <div class="card overflow-hidden shadow rounded-4 border-0 mb-4">
+              <div class="card-body p-0">
+                <div class="d-flex align-items-center">
+                  <div class="p-5">
+                    <h2 class="fw-bolder">Day 04 Recording</h2>
+                  </div>
+                </div>
+                <center><button type="button" class="btn btn-outline-primary" id="g84">View Video</button></center>
+                <br>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Class Section (Single Button) -->
+          <div id="liveClassSection" style="display:none;">
+            <div class="card shadow rounded-4 border-0 p-3">
+              <h3 class="fw-bolder mb-3">Live Class</h3>
+              <center>
+                <button id="goLiveBtn" class="btn btn-outline-primary">Go to Live Class</button>
+              </center>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Dark Mode Button (Fixed Bottom-Right) -->
+      <button id="darkModeToggle" class="btn btn-dark">Dark Mode</button>
+
+      <!-- Footer -->
+      <footer class="bg-white py-4 mt-auto">
+        <div class="container px-5 text-center small">&copy; ආද❤️ණීය ගණිතය පන්තිය 2025</div>
+      </footer>
+    </main>
+
+    <script>
+      // Show name
+      const studentName = localStorage.getItem("studentName");
+      if (studentName) {
+        document.getElementById("welcome-message").textContent = `Hello, ${studentName} 👋`;
+      } else {
+        window.location.href = "login.html";
+      }
+
+      // Developer-only links
+      const recordingsLinks = {
+        g81: "https://www.youtube.com/link_day1",
+        g82: "https://www.youtube.com/link_day2",
+        g83: "https://www.youtube.com/link_day3",
+        g84: "https://www.youtube.com/link_day4"
+      };
+
+      Object.keys(recordingsLinks).forEach(id => {
+        document.getElementById(id).addEventListener("click", () => {
+          window.open(recordingsLinks[id], "_blank");
+        });
+      });
+
+      const liveClassLink = "https://www.youtube.com/live_link_here";
+
+      document.getElementById("goLiveBtn").addEventListener("click", () => {
+        window.open(liveClassLink, "_blank");
+      });
+
+      // Toggle sections
+      const recSection = document.getElementById("recordingsSection");
+      const liveSection = document.getElementById("liveClassSection");
+      const toLive = document.getElementById("toggleLiveBtn");
+      const toRec = document.getElementById("toggleRecBtn");
+
+      toLive.addEventListener("click", () => {
+        recSection.style.display = "none";
+        liveSection.style.display = "block";
+        toLive.style.display = "none";
+        toRec.style.display = "inline-block";
+      });
+
+      toRec.addEventListener("click", () => {
+        recSection.style.display = "block";
+        liveSection.style.display = "none";
+        toLive.style.display = "inline-block";
+        toRec.style.display = "none";
+      });
+
+      // Dark Mode Toggle
+      const darkToggle = document.getElementById("darkModeToggle");
+      darkToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+      });
+    </script>
+  </body>
+</html>
