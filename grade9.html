@@ -76,7 +76,7 @@
             <div class="card overflow-hidden shadow rounded-4 border-0 mb-4">
               <div class="card-body p-0">
                 <div class="d-flex align-items-center">
-                  <div class="p-5"><h2 class="fw-bolder">Day 01 Recording</h2></div>
+                  <div class="p-5"><h2 class="fw-bolder">Day 01 Recording 2025/11/08</h2></div>
                 </div>
                 <center><button type="button" class="btn btn-outline-primary" id="g91">View Video</button></center><br>
               </div>
@@ -139,12 +139,17 @@
         window.location.href = "login.html";
       }
 
-      const recordingsLinks = { g91:"https://www.youtube.com/link_day1", g92:"https://www.youtube.com/link_day2", g93:"https://www.youtube.com/link_day3", g94:"https://www.youtube.com/link_day4" };
+      const recordingsLinks = {
+        g91:"https://youtu.be/N1Xhi9tAIBo",
+        g92:"https://www.youtube.com/link_day2",
+        g93:"https://www.youtube.com/link_day3",
+        g94:"https://www.youtube.com/link_day4" };
+      
       Object.keys(recordingsLinks).forEach(id => {
         document.getElementById(id).addEventListener("click", () => { window.open(recordingsLinks[id], "_blank"); });
       });
 
-      const liveClassLink = "https://us06web.zoom.us/j/86084280140?pwd=XKuK33SYcdwbuilbGhE0XuE5C979LW.1";
+      const liveClassLink = "";
       document.getElementById("goLiveBtn").addEventListener("click", () => { window.open(liveClassLink, "_blank"); });
 
       const recSection = document.getElementById("recordingsSection");
@@ -167,4 +172,5 @@
     </script>
   </body>
 </html>
+
 
