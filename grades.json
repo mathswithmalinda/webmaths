@@ -1,0 +1,58 @@
+{
+  "grades": {
+    "grade06": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 06 - Theory Class",
+        "url": "https://youtube.com/sample_g6"
+      }
+    },
+    "grade07": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 07 - Introduction",
+        "url": "https://youtube.com/sample_g7"
+      }
+    },
+    "grade08": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 08 - Discussion",
+        "url": "https://youtube.com/sample_g8"
+      }
+    },
+    "grade09": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 09 - Lesson 01",
+        "url": "https://youtube.com/sample_g9"
+      }
+    },
+    "grade10": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 10 - Paper Class",
+        "url": "https://youtube.com/sample_g10"
+      }
+    },
+    "grade11": {
+      "link1": {
+        "active": true,
+        "expiresAt": "2026-12-31T23:59",
+        "teacher": "Malinda Sir",
+        "title": "Grade 11 - Final Revision",
+        "url": "https://youtube.com/sample_g11"
+      }
+    }
+  }
+}
