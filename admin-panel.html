@@ -1,115 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - User Tracking</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
-    </style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Maths with Malinda | Student Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
 </head>
-<body class="bg-gray-50 p-6">
-
-    <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Live User Tracking Dashboard</h1>
-            <span id="userCount" class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm">Loading...</span>
-        </div>
-
-        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
-            <table class="w-full text-left">
-                <thead class="bg-gray-800 text-white">
-                    <tr>
-                        <th class="px-6 py-4">Student ID</th>
-                        <th class="px-6 py-4">Name</th>
-                        <th class="px-6 py-4">Current Page</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Last Active</th>
-                    </tr>
-                </thead>
-                <tbody id="trackingTableBody" class="divide-y divide-gray-200">
-                </tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
-
-    <script>
-        // --- ADMIN LOGIN SECURITY ---
-      //  const adminUser = "admin";       // Set your admin username
-     //   const adminPass = "malinda123";  // Set your admin password
-
-    //    const enteredUser = prompt("Admin Username එක ඇතුළත් කරන්න:");
-    //    const enteredPass = prompt("Admin Password එක ඇතුළත් කරන්න:");
-
-    //    if (enteredUser !== adminUser || enteredPass !== adminPass) {
-    //        alert("වැරදි දත්ත! ඔබට මෙම පිටුව බැලීමට අවසර නැත.");
-    //        window.location.href = "index.html"; // Redirect to login if wrong
-   //     }
-        // ----------------------------
-
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
-            authDomain: "mathswithmalindasirweb.firebaseapp.com",
-            databaseURL: "https://mathswithmalindasirweb-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "mathswithmalindasirweb",
-            storageBucket: "mathswithmalindasirweb.firebasestorage.app",
-            messagingSenderId: "806771086827",
-            appId: "1:806771086827:web:55978c72cac010a3d935ae",
-            measurementId: "G-HDNBFV1V96"
-        };
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        // Reference to users node
-        const usersRef = db.ref("users");
-
-        // Real-time data listener
-        usersRef.on("value", (snapshot) => {
-            const tableBody = document.getElementById("trackingTableBody");
-            const userCount = document.getElementById("userCount");
-            tableBody.innerHTML = "";
-
-            const users = snapshot.val();
-            if (!users) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No users found</td></tr>`;
-                userCount.innerText = "Active Users: 0";
-                return;
-            }
-
-            userCount.innerText = `Active Users: ${Object.keys(users).length}`;
-
-            for (const id in users) {
-                const user = users[id];
-                const lastActive = user.last_active || "Just now";
-                const row = `
-                    <tr class="hover:bg-blue-50 transition-colors">
-                        <td class="px-6 py-4 font-semibold text-blue-600">${id}</td>
-                        <td class="px-6 py-4 text-gray-700">${user.name || "-"}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-gray-100 rounded-md text-xs font-medium">${user.page || "-"}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="flex items-center text-green-500 font-bold">
-                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                                Online
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-500 text-sm">${lastActive}</td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
-            }
-        });
-    </script>
-
-</body>
-</html>
+<body>
+  <section id="adminLock" class="lock-screen"><form id="adminLogin" class="login-card"><p class="eyebrow">MATHS WITH MALINDA</p><h1>Admin access</h1><p>Use the existing <code>admin</code> account passcode.</p><label>Admin passcode<input id="adminPasscode" type="password" required autofocus></label><button>Unlock panel</button><small id="lockMessage"></small></form></section>
+  <main id="app" hidden>
+    <aside><div class="brand"><span>∑</span><div>Maths with Malinda<small>STUDENT ADMIN</small></div></div><nav><button class="nav active" data-view="dashboard">▦ Dashboard</button><button class="nav" data-view="students">♙ Students</button><button class="nav" data-view="payments">◫ Payments</button></nav><button id="signOut" class="signout">↪ Lock panel</button></aside>
+    <section class="content"><header><div><p class="eyebrow" id="monthLabel"></p><h1 id="viewTitle">Dashboard</h1></div><button id="addStudent" class="primary">＋ Add student</button></header>
+      <div id="dashboard" class="view"><div class="stats"><article><span>Students</span><strong id="totalCount">—</strong><small>Registered accounts</small></article><article><span>Active</span><strong id="activeCount">—</strong><small>Can access class</small></article><article><span>Paid this month</span><strong id="paidCount">—</strong><small>Verified by admin</small></article><article><span>Pending payment</span><strong id="pendingCount">—</strong><small>Needs review / payment</small></article></div><article class="notice"><div><b>Monthly payment cycle</b><p>First 14 days are free. From day 15, only students paid for this month can log in.</p></div><button id="resetPayments" class="danger-outline">Reset this month’s payments</button></article><section class="table-card"><div class="table-head"><h2>Needs attention</h2><button class="text-button" data-open="payments">View payments →</button></div><div id="attentionList"></div></section></div>
+      <div id="students" class="view" hidden><div class="toolbar"><input id="studentSearch" placeholder="Search ID, name, phone or grade"><select id="gradeFilter"><option value="">All grades</option><option value="grade6.html">Grade 06</option><option value="grade7.html">Grade 07</option><option value="grade8.html">Grade 08</option><option value="grade9.html">Grade 09</option><option value="grade10.html">Grade 10</option><option value="grade11.html">Grade 11</option></select></div><section class="table-card"><div id="studentsList"></div></section></div>
+      <div id="payments" class="view" hidden><section class="table-card"><div class="table-head"><div><h2>Payment verification</h2><p>Activate only after checking the payment detail.</p></div><button id="showAllPayments" class="text-button">Show all</button></div><div id="paymentsList"></div></section></div>
+    </section>
+  </main>
+  <dialog id="studentDialog"><form id="studentForm" method="dialog"><div class="modal-head"><h2 id="formTitle">Add student</h2><button type="button" class="icon-close" data-close>×</button></div><input id="editId" type="hidden"><div class="form-grid"><label>Student ID<input id="studentId" placeholder="STU1001" required></label><label>Passcode<input id="studentPasscode" required></label><label>Student name<input id="studentFullName" placeholder="Optional"></label><label>Phone number<input id="studentPhone" placeholder="Optional"></label><label>Grade<select id="studentPage" required><option value="grade6.html">Grade 06</option><option value="grade7.html">Grade 07</option><option value="grade8.html">Grade 08</option><option value="grade9.html">Grade 09</option><option value="grade10.html">Grade 10</option><option value="grade11.html">Grade 11</option></select></label><label>Status<select id="studentStatus"><option value="active">Active</option><option value="suspended">Suspended</option></select></label></div><div class="modal-actions"><button type="button" class="secondary" data-close>Cancel</button><button class="primary">Save student</button></div></form></dialog>
+  <dialog id="paymentDialog"><form id="paymentForm" method="dialog"><div class="modal-head"><h2>Verify payment</h2><button type="button" class="icon-close" data-close>×</button></div><p id="paymentStudent"></p><label>Payment detail / receipt no.<textarea id="paymentNote" required placeholder="Bank reference, date, amount, etc."></textarea></label><div class="modal-actions"><button type="button" class="secondary" data-close>Cancel</button><button class="primary">Activate payment</button></div></form></dialog>
+  <div id="toast" role="status"></div><script src="admin.js"></script>
+</body></html>
