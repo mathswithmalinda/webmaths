@@ -116,28 +116,49 @@
       if(snapshot.exists()){
         const data = snapshot.val();
 
+        // 🛑 1. ADMIN BLOCK CHECK
+        const userStatus = (data.status || 'active').toLowerCase();
+        if(userStatus === "blocked") {
+          alert("❌ Your account has been blocked by the Admin. Please contact Sir.");
+          return; // Block කර ඇත්නම් මෙතැනින් නවතී.
+        }
+
+        // 🔑 2. PASSCODE MATCH CHECK
         if(data.passcode === passcode){
+          
+          // 🔒 3. 3RD WEEK PAYMENT CHECK (Date > 14)
+          const today = new Date();
+          const currentMonthKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}`;
+          const isPaid = data.payments && data.payments[currentMonthKey] && data.payments[currentMonthKey].status === "paid";
+          
+          if(today.getDate() > 14 && !isPaid) {
+            alert("❌ Payment required! Access is locked after the 2nd week of the month.");
+            return;
+          }
+
           alert("✅ Login Success");
 
-          // 🔹 Save student name & id BEFORE redirect
+          // Save student details in local storage
           localStorage.setItem("studentName", studentName);
           localStorage.setItem("studentId", username);
 
-          // 🔹 Update last_active in Firebase Realtime DB BEFORE redirect
+          // Update last active
           userRef.update({
             last_active: new Date().toLocaleString()
           });
 
-          // 🔹 Redirect after everything is done
-          window.location.replace(data.page); // grade11.html / grade10.html
+          // Redirect to student page
+          const targetPage = data.page || `grade${data.grade}.html`;
+          window.location.replace(targetPage);
+
         } else {
-          alert("❌ Wrong Passcode");
+          alert("❌ Incorrect Passcode!");
         }
 
       } else {
-        alert("❌ User Not Found");
+        alert("❌ Student ID Not Found!");
       }
-    }).catch(err=>{
+    }).catch(err => {
       console.error(err);
       alert("Error connecting to database");
     });
