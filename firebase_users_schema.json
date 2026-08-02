@@ -1,0 +1,59 @@
+{
+  "_comment": "Firebase Realtime Database initial schema for 'users' node ONLY. Do NOT touch 'links' node.",
+  "users": {
+    "STU001": {
+      "name": "Kamal Perera",
+      "classId": "STU001",
+      "grade": 6,
+      "institute": "The Tutor",
+      "status": "active",
+      "subCourses": {
+        "theory": true,
+        "paper": true
+      },
+      "payments": {
+        "2026-08": {
+          "status": "paid",
+          "paidAt": "2026-08-01",
+          "updatedBy": "admin"
+        }
+      }
+    },
+    "STU002": {
+      "name": "Nimali Silva",
+      "classId": "STU002",
+      "grade": 11,
+      "institute": "Nimthera",
+      "status": "active",
+      "subCourses": {
+        "theory": true,
+        "paper": false
+      },
+      "payments": {
+        "2026-08": {
+          "status": "unpaid",
+          "paidAt": "",
+          "updatedBy": "admin"
+        }
+      }
+    },
+    "STU003": {
+      "name": "Sunil Shantha",
+      "classId": "STU003",
+      "grade": 10,
+      "institute": "Hope",
+      "status": "blocked",
+      "subCourses": {
+        "theory": true,
+        "paper": true
+      },
+      "payments": {
+        "2026-08": {
+          "status": "unpaid",
+          "paidAt": "",
+          "updatedBy": "admin"
+        }
+      }
+    }
+  }
+}

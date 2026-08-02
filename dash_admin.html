@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LMS Admin Panel - Maths with Malinda Sir</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDKs (v9 Compat Mode) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-20">
+
+    <!-- Navbar -->
+    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-graduation-cap text-2xl text-cyan-400"></i>
+            <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Maths with Malinda Sir - Admin</h1>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="switchTab('students')" id="btn-tab-students" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white">
+                <i class="fa-solid fa-users mr-2"></i>Students
+            </button>
+            <button onclick="switchTab('payments')" id="btn-tab-payments" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600">
+                <i class="fa-solid fa-credit-card mr-2"></i>Payments
+            </button>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto px-4 mt-6">
+
+        <!-- SECTION 1: STUDENT MANAGEMENT PAGE -->
+        <div id="section-students" class="space-y-6">
+            
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Student Management</h2>
+                    <p class="text-slate-400 text-sm">Add students with passcode, assign institutes, and manage accounts.</p>
+                </div>
+                <button onclick="openModal('addStudentModal')" class="w-full md:w-auto px-5 py-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20">
+                    <i class="fa-solid fa-user-plus"></i> Add New Student
+                </button>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-6">
+                <div class="flex flex-col md:flex-row gap-4 mb-6">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                        <input type="text" id="studentSearch" oninput="filterStudents()" placeholder="Search by ID or Name..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-11 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
+                            <tr>
+                                <th class="p-4">Class ID</th>
+                                <th class="p-4">Name</th>
+                                <th class="p-4">Passcode</th>
+                                <th class="p-4">Grade & Page</th>
+                                <th class="p-4">Institute</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- Populated via Firebase -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- DANGER ZONE: 1-Year Promotion System -->
+            <div class="mt-12 bg-red-950/30 border border-red-800/50 p-6 rounded-2xl shadow-2xl">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-red-400 flex items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i> Academic Year Roll-Over (1 Year Past)
+                        </h3>
+                        <p class="text-slate-400 text-xs mt-1">
+                            Promotes Grade 6-10 to the next Grade page (e.g., grade6.html &rarr; grade7.html). Grade 11 students will be moved to index.html.
+                        </p>
+                    </div>
+                    <button onclick="triggerYearPast()" class="w-full md:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition shadow-lg shadow-red-600/30">
+                        <i class="fa-solid fa-forward-step mr-2"></i> Execute 1 Year Promotion
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 2: PAYMENT MANAGEMENT SYSTEM -->
+        <div id="section-payments" class="space-y-6 hidden">
+            
+            <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold text-white">Payment Management Panel</h2>
+                    <p class="text-slate-400 text-sm">Manage student payment states and institute filters.</p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <select id="instituteFilter" onchange="filterPayments()" class="bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500 w-full">
+                        <option value="ALL">All Institutes</option>
+                        <option value="The Tutor">The Tutor</option>
+                        <option value="Nimthera">Nimthera</option>
+                        <option value="Hope">Hope</option>
+                        <option value="Aps">Aps</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-4">
+                <div class="relative flex-1">
+                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                    <input type="text" id="paymentSearch" oninput="filterPayments()" placeholder="Search Student ID or Name..." class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-11 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                </div>
+                <select id="gradeFilter" onchange="filterPayments()" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500">
+                    <option value="ALL">All Grades</option>
+                    <option value="6">Grade 6</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                </select>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-300">
+                        <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
+                            <tr>
+                                <th class="p-4">Student ID</th>
+                                <th class="p-4">Name</th>
+                                <th class="p-4">Grade & Institute</th>
+                                <th class="p-4">Courses (Gr 11)</th>
+                                <th class="p-4">3rd Week Lock</th>
+                                <th class="p-4">Payment Status</th>
+                                <th class="p-4 text-center">Toggle Pay</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentTableBody">
+                            <!-- Populated via Firebase -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MODAL: ADD STUDENT -->
+    <div id="addStudentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <h3 class="text-xl font-bold text-white">Add New Student</h3>
+            <form id="addStudentForm" onsubmit="saveStudent(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">FULL NAME</label>
+                    <input type="text" id="newStudentName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">STUDENT ID (UNIQUE)</label>
+                    <input type="text" id="newClassId" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">PASSCODE (FOR LOGIN)</label>
+                    <input type="text" id="newPasscode" required placeholder="e.g. 1234" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">GRADE SELECT</label>
+                    <select id="newGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                        <option value="6">Grade 6</option>
+                        <option value="7">Grade 7</option>
+                        <option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                        <option value="11">Grade 11</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">INSTITUTE</label>
+                    <select id="newInstitute" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                        <option value="The Tutor">The Tutor</option>
+                        <option value="Nimthera">Nimthera</option>
+                        <option value="Hope">Hope</option>
+                        <option value="Aps">Aps</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+                
+                <div class="border-t border-slate-700 pt-3">
+                    <label class="block text-xs font-semibold text-slate-400 mb-2">COURSE ACCESS TYPE</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center text-sm gap-2 text-slate-300">
+                            <input type="checkbox" id="subTheory" checked class="accent-cyan-500"> Theory
+                        </label>
+                        <label class="flex items-center text-sm gap-2 text-slate-300">
+                            <input type="checkbox" id="subPaper" checked class="accent-cyan-500"> Paper Class
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal('addStudentModal')" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-500 text-slate-950 font-bold rounded-xl">Save Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT LOGIC -->
+    <script>
+        // FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
+            authDomain: "mathswithmalindasirweb.firebaseapp.com",
+            databaseURL: "https://mathswithmalindasirweb-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "mathswithmalindasirweb",
+            storageBucket: "mathswithmalindasirweb.firebasestorage.app",
+            messagingSenderId: "806771086827",
+            appId: "1:806771086827:web:55978c72cac010a3d935ae"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const usersRef = db.ref('users');
+
+        let allStudents = {};
+
+        // Realtime Fetch from Database
+        usersRef.on('value', (snapshot) => {
+            allStudents = snapshot.val() || {};
+            renderStudentsTable();
+            renderPaymentTable();
+        });
+
+        function getCurrentMonthKey() {
+            const date = new Date();
+            return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function isThirdWeekOrLater() {
+            const today = new Date();
+            return today.getDate() > 14;
+        }
+
+        // Save New Student with Passcode and Target HTML Page
+        function saveStudent(e) {
+            e.preventDefault();
+            const classId = document.getElementById('newClassId').value.trim();
+            const name = document.getElementById('newStudentName').value.trim();
+            const passcode = document.getElementById('newPasscode').value.trim();
+            const grade = parseInt(document.getElementById('newGrade').value);
+            const institute = document.getElementById('newInstitute').value;
+            const subTheory = document.getElementById('subTheory').checked;
+            const subPaper = document.getElementById('subPaper').checked;
+
+            const newStudentObj = {
+                name: name,
+                classId: classId,
+                passcode: passcode, // Passcode for login
+                grade: grade,
+                page: `grade${grade}.html`, // Dynamic Target Page
+                institute: institute,
+                status: 'active',
+                subCourses: { theory: subTheory, paper: subPaper },
+                payments: {
+                    [getCurrentMonthKey()]: { status: 'unpaid', updatedBy: 'admin' }
+                }
+            };
+
+            usersRef.child(classId).set(newStudentObj, (error) => {
+                if (!error) {
+                    closeModal('addStudentModal');
+                    alert(`Student added successfully with Passcode: ${passcode}`);
+                    document.getElementById('addStudentForm').reset();
+                } else {
+                    alert('Database Error: ' + error.message);
+                }
+            });
+        }
+
+        function toggleBlockStatus(classId, currentStatus) {
+            const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
+            usersRef.child(classId).update({ status: newStatus });
+        }
+
+        function removeStudent(classId) {
+            if (confirm(`Are you sure you want to delete student ID: ${classId}?`)) {
+                usersRef.child(classId).remove();
+            }
+        }
+
+        function togglePayment(classId, isPaid) {
+            const monthKey = getCurrentMonthKey();
+            const status = isPaid ? 'paid' : 'unpaid';
+            usersRef.child(`${classId}/payments/${monthKey}`).set({
+                status: status,
+                paidAt: new Date().toISOString().split('T')[0],
+                updatedBy: 'admin'
+            });
+        }
+
+        function renderStudentsTable() {
+            const tbody = document.getElementById('studentTableBody');
+            tbody.innerHTML = '';
+            const searchInput = document.getElementById('studentSearch');
+            const search = searchInput ? (searchInput.value || '').toLowerCase() : '';
+
+            Object.keys(allStudents).forEach(key => {
+                const s = allStudents[key];
+                if (!s) return;
+
+                const studentName = (s.name || '').toLowerCase();
+                const studentId = (s.classId || key || '').toLowerCase();
+
+                if (studentName.includes(search) || studentId.includes(search)) {
+                    const row = `
+                        <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                            <td class="p-4 font-mono text-cyan-400 font-bold">${s.classId || key}</td>
+                            <td class="p-4">${s.name || 'N/A'}</td>
+                            <td class="p-4 font-mono text-yellow-400">${s.passcode || 'N/A'}</td>
+                            <td class="p-4">
+                                <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 px-2.5 py-1 rounded-md text-xs">Grade ${s.grade || '-'}</span>
+                                <span class="text-slate-400 text-xs ml-1">(${s.page || 'N/A'})</span>
+                            </td>
+                            <td class="p-4">${s.institute || 'N/A'}</td>
+                            <td class="p-4">
+                                ${s.status === 'blocked' 
+                                    ? `<span class="bg-red-900/50 text-red-400 border border-red-700 text-xs px-2 py-1 rounded">Blocked</span>` 
+                                    : `<span class="bg-emerald-900/50 text-emerald-400 border border-emerald-700 text-xs px-2 py-1 rounded">Active</span>`}
+                            </td>
+                            <td class="p-4 text-right flex justify-end gap-2">
+                                <button onclick="toggleBlockStatus('${s.classId || key}', '${s.status}')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">
+                                    ${s.status === 'blocked' ? 'Unblock' : 'Block'}
+                                </button>
+                                <button onclick="removeStudent('${s.classId || key}')" class="px-3 py-1 bg-red-900/40 hover:bg-red-800 text-red-300 rounded text-xs border border-red-700">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tbody.innerHTML += row;
+                }
+            });
+        }
+
+        function renderPaymentTable() {
+            const tbody = document.getElementById('paymentTableBody');
+            tbody.innerHTML = '';
+            const monthKey = getCurrentMonthKey();
+            const instFilter = document.getElementById('instituteFilter').value;
+            const gradeFilter = document.getElementById('gradeFilter').value;
+            const searchInput = document.getElementById('paymentSearch');
+            const search = searchInput ? (searchInput.value || '').toLowerCase() : '';
+            const thirdWeekLocked = isThirdWeekOrLater();
+
+            Object.keys(allStudents).forEach(key => {
+                const s = allStudents[key];
+                if (!s) return;
+
+                const studentName = (s.name || '').toLowerCase();
+                const studentId = (s.classId || key || '').toLowerCase();
+                const studentGrade = s.grade ? s.grade.toString() : '';
+                const studentInst = s.institute || '';
+                
+                if (instFilter !== 'ALL' && studentInst !== instFilter) return;
+                if (gradeFilter !== 'ALL' && studentGrade !== gradeFilter) return;
+                if (search && !studentId.includes(search) && !studentName.includes(search)) return;
+
+                const isPaid = s.payments && s.payments[monthKey] && s.payments[monthKey].status === 'paid';
+                const courseTheory = s.subCourses ? s.subCourses.theory : true;
+                const coursePaper = s.subCourses ? s.subCourses.paper : true;
+
+                const row = `
+                    <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
+                        <td class="p-4 font-mono text-cyan-400">${s.classId || key}</td>
+                        <td class="p-4">${s.name || 'N/A'}</td>
+                        <td class="p-4">${studentInst} (Gr. ${s.grade || '-'})</td>
+                        <td class="p-4 text-xs">
+                            ${s.grade === 11 ? `
+                                <span class="${courseTheory ? 'text-emerald-400' : 'text-slate-500'}">Theory: ${courseTheory ? 'Yes' : 'No'}</span> | 
+                                <span class="${coursePaper ? 'text-emerald-400' : 'text-slate-500'}">Paper: ${coursePaper ? 'Yes' : 'No'}</span>
+                            ` : 'N/A'}
+                        </td>
+                        <td class="p-4">
+                            ${thirdWeekLocked && !isPaid 
+                                ? `<span class="text-red-400 text-xs font-semibold"><i class="fa-solid fa-lock"></i> Locked</span>` 
+                                : `<span class="text-emerald-400 text-xs"><i class="fa-solid fa-lock-open"></i> Allowed</span>`}
+                        </td>
+                        <td class="p-4">
+                            ${isPaid 
+                                ? `<span class="bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs px-2.5 py-1 rounded-full">PAID</span>` 
+                                : `<span class="bg-red-950 text-red-400 border border-red-800 text-xs px-2.5 py-1 rounded-full">NOT PAID</span>`}
+                        </td>
+                        <td class="p-4 text-center">
+                            <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-5 h-5 accent-cyan-500 cursor-pointer">
+                        </td>
+                    </tr>
+                `;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // SECRET PASSCODE FOR YEAR PROMOTION
+        function triggerYearPast() {
+            const secretPass = prompt("Enter Secret Admin Passcode for Year Promotion:");
+            // 🔑 SECRET PASSCODE IS: admin123#
+            if (secretPass === "admin123#") {
+                if (confirm("Promote all Grade 6-10 students to the next grade and Grade 11 to Home page?")) {
+                    const updates = {};
+                    Object.keys(allStudents).forEach(key => {
+                        const currentGrade = parseInt(allStudents[key].grade);
+                        if (currentGrade < 11) {
+                            const nextGrade = currentGrade + 1;
+                            updates[`/users/${key}/grade`] = nextGrade;
+                            updates[`/users/${key}/page`] = `grade${nextGrade}.html`;
+                        } else if (currentGrade === 11) {
+                            updates[`/users/${key}/grade`] = "Home"; 
+                            updates[`/users/${key}/page`] = "index.html"; 
+                        }
+                    });
+
+                    db.ref().update(updates, (err) => {
+                        if (!err) alert("Year promotion completed! Grade pages updated.");
+                        else alert("Promotion failed: " + err.message);
+                    });
+                }
+            } else {
+                alert("Incorrect Admin Passcode!");
+            }
+        }
+
+        function switchTab(tab) {
+            document.getElementById('section-students').classList.toggle('hidden', tab !== 'students');
+            document.getElementById('section-payments').classList.toggle('hidden', tab !== 'payments');
+            document.getElementById('btn-tab-students').className = tab === 'students' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
+            document.getElementById('btn-tab-payments').className = tab === 'payments' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
+        }
+        function filterStudents() { renderStudentsTable(); }
+        function filterPayments() { renderPaymentTable(); }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    </script>
+</body>
+</html>
