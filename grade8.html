@@ -23,6 +23,25 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent; 
       }
+      .cursor-pointer { cursor: pointer; }
+      
+      .red-dot {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        width: 12px;
+        height: 12px;
+        background-color: #ff0055;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 0 8px #ff0055;
+        animation: pulse-red 1.5s infinite;
+      }
+      @keyframes pulse-red {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(255, 0, 85, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 0, 85, 0); }
+      }
     </style>
   </head>
 
@@ -31,13 +50,24 @@
       <nav class="navbar navbar-expand-lg navbar-light bg-white py-3 shadow-sm">
         <div class="container px-5">
           <a class="navbar-brand" href="#"><span class="fw-bolder text-primary">ආද❤️ණීය ගණිතය පන්තිය</span></a>
-          <div class="collapse navbar-collapse show" id="navbarSupportedContent">
+          
+          <div class="d-flex align-items-center ms-auto me-3">
+            <div class="position-relative cursor-pointer p-2" id="notifBellBtn" data-bs-toggle="modal" data-bs-target="#notifModal">
+                <i class="bi bi-bell-fill fs-4 text-primary"></i>
+                <span id="redLightDot" class="red-dot" style="display: none;"></span>
+            </div>
+          </div>
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
               <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
               <li class="nav-item"><a class="nav-link" href="service.html">Service</a></li>
               <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-              
             </ul>
           </div>
         </div>
@@ -75,6 +105,21 @@
 
       <button id="darkModeToggle" class="btn btn-dark rounded-circle shadow-lg"><i class="bi bi-moon-fill"></i></button>
 
+      <!-- NOTIFICATION MODAL -->
+      <div class="modal fade" id="notifModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title fw-bold text-primary"><i class="bi bi-bell-fill me-2"></i>Notifications</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="notifList">
+              <p class="text-muted text-center py-3">නොටිෆිකේෂන් කිසිවක් නැත.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <footer class="bg-white py-4 mt-auto border-top">
         <div class="container px-5 text-center small">&copy; ආද❤️ණීය ගණිතය පන්තිය - Wishwa Tech 2026</div>
       </footer>
@@ -84,7 +129,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
@@ -99,25 +144,32 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Welcome Message
-        const studentName = localStorage.getItem("studentName");
-        if (studentName) {
-            document.getElementById("welcome-message").textContent = `Hello, ${studentName} 👋`;
-        } else {
-            window.location.href = "login.html";
-        }
+        // Router
+        window.handleMediaLink = function(rawUrl) {
+            if (!rawUrl || rawUrl.trim() === "") return;
+            const url = rawUrl.trim();
+            if (url.includes("zoom.us")) { window.location.href = url; return; }
+            const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|live)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+            const match = url.match(regExp);
+            const ytId = (match && match[1]) ? match[1] : null;
+            if (ytId) { window.location.href = `watch.html?v=${ytId}`; } else { window.open(url, "_blank"); }
+        };
 
-        // Grade 08 Data Retrieval
+        // Greeting
+        const studentName = localStorage.getItem("studentName") || "Student";
+        const studentClassId = localStorage.getItem("studentId") || "";
+        document.getElementById("welcome-message").textContent = `Hello, ${studentName} 👋`;
+
         const recSection = document.getElementById("recordingsSection");
         const liveSection = document.getElementById("liveClassSection");
 
-        // Firebase Realtime Update for Grade 08
+        // Grade 08 Data Retrieval
         onValue(ref(db, 'grades/grade08'), (snapshot) => {
             const data = snapshot.val();
             recSection.innerHTML = ""; 
 
             if (!data) {
-                recSection.innerHTML = "<div class='p-5'>No recordings available for Grade 08 yet.</div>";
+                recSection.innerHTML = "<div class='p-5 text-muted'>දැනට පටිගත කිරීම් කිසිවක් නොමැත.</div>";
                 return;
             }
 
@@ -127,15 +179,85 @@
                     const card = document.createElement("div");
                     card.className = "card overflow-hidden shadow-sm rounded-4 border-0 mb-4";
                     card.innerHTML = `
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 text-center">
                             <h2 class="fw-bolder mb-3">${item.title}</h2>
-                            <button class="btn btn-outline-primary rounded-pill px-4" onclick="window.open('${item.url}', '_blank')">
+                            <button class="btn btn-outline-primary rounded-pill px-4" onclick="window.handleMediaLink('${item.url}')">
                                 <i class="bi bi-play-circle-fill"></i> View Video
                             </button>
                         </div>`;
                     recSection.appendChild(card);
                 }
             });
+        });
+
+        // Notifications System (Updated)
+        const notifList = document.getElementById("notifList");
+        const redLightDot = document.getElementById("redLightDot");
+        const notifBellBtn = document.getElementById("notifBellBtn");
+
+        onValue(ref(db, "notifications"), (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                redLightDot.style.display = "none";
+                notifList.innerHTML = "<p class='text-muted text-center py-3'>නොටිෆිකේෂන් කිසිවක් නැත.</p>";
+                return;
+            }
+
+            const now = Date.now();
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+            let activeItems = [];
+            let hasUnread = false;
+
+            const lastSeenTime = parseInt(localStorage.getItem("notifLastSeenTime") || "0");
+
+            const processItems = (itemsObj, pathPrefix) => {
+                if (!itemsObj) return;
+                Object.keys(itemsObj).forEach(key => {
+                    const item = itemsObj[key];
+                    const created = item.createdAt || 0;
+                    if (now - created > TWENTY_FOUR_HOURS) {
+                        remove(ref(db, `notifications/${pathPrefix}/${key}`));
+                    } else {
+                        activeItems.push(item);
+                        if (created > lastSeenTime) hasUnread = true;
+                    }
+                });
+            };
+
+            // Global, Grade 08 and Grade 8 paths, and Student specific notifications
+            processItems(data.global, "global");
+            processItems(data.grade08, "grade08");
+            processItems(data.grade8, "grade8");
+            if (studentClassId && data.students && data.students[studentClassId]) {
+                processItems(data.students[studentClassId], `students/${studentClassId}`);
+            }
+
+            redLightDot.style.display = hasUnread ? "block" : "none";
+
+            if (activeItems.length > 0) {
+                activeItems.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                notifList.innerHTML = "";
+                activeItems.forEach(n => {
+                    const dateStr = n.createdAt ? new Date(n.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    const linkBtn = n.link ? `<br/><button onclick="window.handleMediaLink('${n.link}')" class="btn btn-sm btn-primary mt-2 rounded-pill">Open Link</button>` : '';
+                    notifList.innerHTML += `
+                        <div class="border-bottom pb-2 mb-2 text-start">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <strong class="text-dark">${n.title}</strong>
+                                <small class="text-muted" style="font-size: 11px;">${dateStr}</small>
+                            </div>
+                            <p class="mb-1 text-secondary small">${n.message}</p>
+                            ${linkBtn}
+                        </div>`;
+                });
+            } else {
+                notifList.innerHTML = "<p class='text-muted text-center py-3'>නොටිෆිකේෂන් කිසිවක් නැත.</p>";
+            }
+        });
+
+        notifBellBtn.addEventListener("click", () => {
+            redLightDot.style.display = "none";
+            localStorage.setItem("notifLastSeenTime", Date.now().toString());
         });
 
         // Toggle Logic
@@ -156,10 +278,7 @@
             toRec.style.display = "none";
         };
 
-        // Dark Mode
-        document.getElementById("darkModeToggle").onclick = () => {
-            document.body.classList.toggle("dark-mode");
-        };
+        document.getElementById("darkModeToggle").onclick = () => document.body.classList.toggle("dark-mode");
     </script>
   </body>
 </html>
