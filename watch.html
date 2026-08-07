@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Player - ආද❤️ණීය ගණිතය පන්තිය</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow-x: hidden;
+        }
+
+        .player-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            margin: 30px auto;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+
+        /* Transparent Blocking Overlays (Prevents YouTube/More Videos clicks) */
+        
+        /* Blocks Top Title & Share buttons */
+        .block-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            z-index: 10;
+            background: transparent;
+            pointer-events: auto;
+        }
+
+        /* Blocks YouTube Logo & More Videos button on Pause/Hover */
+        .block-bottom-right {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 45%;
+            height: 65px;
+            z-index: 10;
+            background: transparent;
+            pointer-events: auto;
+        }
+
+        /* Dynamic Moving Watermark Overlay */
+        #watermark {
+            position: absolute;
+            z-index: 99;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 16px;
+            font-weight: bold;
+            font-family: sans-serif;
+            pointer-events: none;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
+            transition: all 3s ease-in-out;
+            padding: 6px 14px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container py-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <button onclick="history.back()" class="btn btn-outline-light rounded-pill px-4">
+                <i class="bi bi-arrow-left me-2"></i> ආපසු යන්න (Back)
+            </button>
+            <span class="text-info fw-bold">ආද❤️ණීය ගණිතය පන්තිය Secure Player</span>
+        </div>
+
+        <div class="player-container">
+            <div class="video-wrapper">
+                <!-- Transparent Blocking Layers -->
+                <div class="block-top"></div>
+                <div class="block-bottom-right"></div>
+
+                <!-- Watermark -->
+                <div id="watermark">Loading User Info...</div>
+                
+                <!-- YouTube Embedded Player -->
+                <iframe id="ytPlayer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Get Video ID from URL Parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const videoId = urlParams.get('v');
+
+        if (videoId) {
+            // Parameters:
+            // rel=0 -> Recommendations only from same channel
+            // modestbranding=1 -> Minimizes YT Branding
+            // controls=1 -> Keeps basic controls
+            // fs=1 -> Enables Fullscreen
+            document.getElementById('ytPlayer').src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&iv_load_policy=3&controls=1&fs=1`;
+        } else {
+            alert("⚠️ Invalid Video URL!");
+            history.back();
+        }
+
+        // 2. Setup Watermark (Student Name + Student ID)
+        const studentName = localStorage.getItem("studentName") || "Student";
+        const studentId = localStorage.getItem("studentId") || "ID-Pending";
+        const watermarkEl = document.getElementById("watermark");
+        
+        watermarkEl.innerText = `${studentName} (${studentId})`;
+
+        // Move Watermark randomly every 4 seconds
+        function moveWatermark() {
+            const container = document.querySelector('.video-wrapper');
+            const maxX = container.clientWidth - watermarkEl.clientWidth - 20;
+            const maxY = container.clientHeight - watermarkEl.clientHeight - 20;
+
+            const randomX = Math.max(10, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(10, Math.floor(Math.random() * maxY));
+
+            watermarkEl.style.left = `${randomX}px`;
+            watermarkEl.style.top = `${randomY}px`;
+        }
+        
+        setInterval(moveWatermark, 4000);
+        moveWatermark();
+
+        // 3. Prevent DevTools & Inspecting
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                (e.ctrlKey && e.keyCode === 85) || 
+                (e.ctrlKey && e.keyCode === 83)) { 
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
