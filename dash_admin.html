@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LMS Admin Panel - Maths with Malinda Sir</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Firebase SDKs (v9 Compat Mode) -->
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
 </head>
@@ -27,6 +24,9 @@
             <button onclick="switchTab('payments')" id="btn-tab-payments" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600">
                 <i class="fa-solid fa-credit-card mr-2"></i>Payments
             </button>
+            <button onclick="switchTab('notifications')" id="btn-tab-notifications" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600">
+                <i class="fa-solid fa-bell mr-2"></i>Send Notif
+            </button>
         </div>
     </nav>
 
@@ -34,7 +34,6 @@
 
         <!-- SECTION 1: STUDENT MANAGEMENT PAGE -->
         <div id="section-students" class="space-y-6">
-            
             <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white">Student Management</h2>
@@ -66,57 +65,49 @@
                                 <th class="p-4 text-right">Actions</th>
                             </tr>
                         </thead>
-                        <tbody id="studentTableBody">
-                            <!-- Populated via Firebase -->
-                        </tbody>
+                        <tbody id="studentTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- DANGER ZONE: 1-Year Promotion System -->
             <div class="mt-12 bg-red-950/30 border border-red-800/50 p-6 rounded-2xl shadow-2xl">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
                         <h3 class="text-lg font-bold text-red-400 flex items-center gap-2">
-                            <i class="fa-solid fa-triangle-exclamation"></i> Academic Year Roll-Over (1 Year Past)
+                            <i class="fa-solid fa-triangle-exclamation"></i> Academic Year Roll-Over
                         </h3>
-                        <p class="text-slate-400 text-xs mt-1">
-                            Promotes Grade 6-10 to the next Grade page (e.g., grade6.html &rarr; grade7.html). Grade 11 students will be moved to index.html.
-                        </p>
+                        <p class="text-slate-400 text-xs mt-1">Promotes Grade 6-10 to the next Grade page.</p>
                     </div>
-                    <button onclick="triggerYearPast()" class="w-full md:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition shadow-lg shadow-red-600/30">
-                        <i class="fa-solid fa-forward-step mr-2"></i> Execute 1 Year Promotion
+                    <button onclick="triggerYearPast()" class="w-full md:w-auto px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition">
+                        Execute 1 Year Promotion
                     </button>
                 </div>
             </div>
         </div>
 
-        <!-- SECTION 2: PAYMENT MANAGEMENT SYSTEM -->
+        <!-- SECTION 2: PAYMENT MANAGEMENT -->
         <div id="section-payments" class="space-y-6 hidden">
-            
             <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-white">Payment Management Panel</h2>
-                    <p class="text-slate-400 text-sm">Manage student payment states and institute filters.</p>
+                    <p class="text-slate-400 text-sm">Tick කළ සැනින් අදාළ Student ID එකට ස්වයංක්‍රීයව "Payment Confirmed" Message එකක් යැවේ.</p>
                 </div>
-                <div class="flex gap-2 w-full md:w-auto">
-                    <select id="instituteFilter" onchange="filterPayments()" class="bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500 w-full">
-                        <option value="ALL">All Institutes</option>
-                        <option value="The Tutor">The Tutor</option>
-                        <option value="Nimthera">Nimthera</option>
-                        <option value="Hope">Hope</option>
-                        <option value="Aps">Aps</option>
-                        <option value="Online">Online</option>
-                    </select>
-                </div>
+                <select id="instituteFilter" onchange="filterPayments()" class="bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5">
+                    <option value="ALL">All Institutes</option>
+                    <option value="The Tutor">The Tutor</option>
+                    <option value="Nimthera">Nimthera</option>
+                    <option value="Hope">Hope</option>
+                    <option value="Aps">Aps</option>
+                    <option value="Online">Online</option>
+                </select>
             </div>
 
             <div class="flex flex-col md:flex-row gap-4">
                 <div class="relative flex-1">
                     <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
-                    <input type="text" id="paymentSearch" oninput="filterPayments()" placeholder="Search Student ID or Name..." class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-11 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="paymentSearch" oninput="filterPayments()" placeholder="Search Student ID or Name..." class="w-full bg-slate-800 border border-slate-700 rounded-xl pl-11 pr-4 py-2.5">
                 </div>
-                <select id="gradeFilter" onchange="filterPayments()" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:border-cyan-500">
+                <select id="gradeFilter" onchange="filterPayments()" class="bg-slate-800 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5">
                     <option value="ALL">All Grades</option>
                     <option value="6">Grade 6</option>
                     <option value="7">Grade 7</option>
@@ -128,24 +119,80 @@
             </div>
 
             <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-sm text-slate-300">
-                        <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
-                            <tr>
-                                <th class="p-4">Student ID</th>
-                                <th class="p-4">Name</th>
-                                <th class="p-4">Grade & Institute</th>
-                                <th class="p-4">Courses (Gr 11)</th>
-                                <th class="p-4">3rd Week Lock</th>
-                                <th class="p-4">Payment Status</th>
-                                <th class="p-4 text-center">Toggle Pay</th>
-                            </tr>
-                        </thead>
-                        <tbody id="paymentTableBody">
-                            <!-- Populated via Firebase -->
-                        </tbody>
-                    </table>
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
+                        <tr>
+                            <th class="p-4">Student ID</th>
+                            <th class="p-4">Name</th>
+                            <th class="p-4">Grade & Institute</th>
+                            <th class="p-4">Courses</th>
+                            <th class="p-4">Lock State</th>
+                            <th class="p-4">Payment</th>
+                            <th class="p-4 text-center">Toggle Pay & Auto Notif</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paymentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SECTION 3: NOTIFICATION BROADCAST & MANAGEMENT -->
+        <div id="section-notifications" class="space-y-6 hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                
+                <!-- Send Form -->
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+                    <h2 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-paper-plane text-cyan-400 mr-2"></i>Send Custom Notification</h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">TARGET AUDIENCE</label>
+                            <select id="notifTargetGrade" onchange="toggleStudentIdInput()" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                                <option value="global">All Grades (Global)</option>
+                                <option value="grade11" selected>Grade 11 Only</option>
+                                <option value="grade10">Grade 10 Only</option>
+                                <option value="grade9">Grade 9 Only</option>
+                                <option value="grade8">Grade 8 Only</option>
+                                <option value="grade7">Grade 7 Only</option>
+                                <option value="grade6">Grade 6 Only</option>
+                                <option value="SINGLE_STUDENT" class="text-yellow-400 font-bold">👤 Specific Student Only</option>
+                            </select>
+                        </div>
+
+                        <div id="singleStudentBox" class="hidden bg-slate-900/60 p-3 rounded-xl border border-yellow-500/30">
+                            <label class="block text-xs font-semibold text-yellow-400 mb-1">ENTER STUDENT CLASS ID</label>
+                            <input type="text" id="notifStudentId" placeholder="e.g. ST1024" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">NOTIFICATION TITLE</label>
+                            <input type="text" id="notifTitle" placeholder="e.g. Today Class Link" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">MESSAGE CONTENT</label>
+                            <textarea id="notifMessage" rows="3" placeholder="Enter message text..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1">ZOOM / VIDEO LINK (OPTIONAL)</label>
+                            <input type="text" id="notifLink" placeholder="https://zoom.us/j/123456..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        </div>
+
+                        <button onclick="sendQuickNotification()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-bold rounded-xl transition shadow-lg shadow-cyan-500/20">
+                            <i class="fa-solid fa-bullhorn mr-2"></i> Send Notification
+                        </button>
+                    </div>
                 </div>
+
+                <!-- Active Notifications List -->
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col">
+                    <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-list-check text-cyan-400 mr-2"></i>Active Notifications</h2>
+                    <p class="text-slate-400 text-xs mb-4">මෙහි ඇති Delete බටන් එකෙන් Notification එකක් මකා දැමූ විට සියලුම සිසුන්ගෙන් සෘජුවම ඉවත් වේ. පැය 24 පහු වූ ඒවා auto-delete වේ.</p>
+                    
+                    <div id="adminNotifList" class="space-y-3 overflow-y-auto max-h-[420px] pr-2">
+                        <p class="text-slate-500 text-sm text-center py-4">Loading active notifications...</p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -158,19 +205,19 @@
             <form id="addStudentForm" onsubmit="saveStudent(event)" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">FULL NAME</label>
-                    <input type="text" id="newStudentName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="newStudentName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">STUDENT ID (UNIQUE)</label>
-                    <input type="text" id="newClassId" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="newClassId" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">PASSCODE (FOR LOGIN)</label>
-                    <input type="text" id="newPasscode" required placeholder="e.g. 1234" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                    <input type="text" id="newPasscode" required placeholder="e.g. 1234" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">GRADE SELECT</label>
-                    <select id="newGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                    <select id="newGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
                         <option value="6">Grade 6</option>
                         <option value="7">Grade 7</option>
                         <option value="8">Grade 8</option>
@@ -181,7 +228,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-semibold text-slate-400 mb-1">INSTITUTE</label>
-                    <select id="newInstitute" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white focus:outline-none focus:border-cyan-500">
+                    <select id="newInstitute" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
                         <option value="The Tutor">The Tutor</option>
                         <option value="Nimthera">Nimthera</option>
                         <option value="Hope">Hope</option>
@@ -210,9 +257,7 @@
         </div>
     </div>
 
-    <!-- SCRIPT LOGIC -->
     <script>
-        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
             authDomain: "mathswithmalindasirweb.firebaseapp.com",
@@ -223,14 +268,12 @@
             appId: "1:806771086827:web:55978c72cac010a3d935ae"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const usersRef = db.ref('users');
 
         let allStudents = {};
 
-        // Realtime Fetch from Database
         usersRef.on('value', (snapshot) => {
             allStudents = snapshot.val() || {};
             renderStudentsTable();
@@ -243,11 +286,9 @@
         }
 
         function isThirdWeekOrLater() {
-            const today = new Date();
-            return today.getDate() > 14;
+            return new Date().getDate() > 14;
         }
 
-        // Save New Student with Passcode and Target HTML Page
         function saveStudent(e) {
             e.preventDefault();
             const classId = document.getElementById('newClassId').value.trim();
@@ -259,17 +300,11 @@
             const subPaper = document.getElementById('subPaper').checked;
 
             const newStudentObj = {
-                name: name,
-                classId: classId,
-                passcode: passcode, // Passcode for login
-                grade: grade,
-                page: `grade${grade}.html`, // Dynamic Target Page
-                institute: institute,
-                status: 'active',
+                name, classId, passcode, grade,
+                page: `grade${grade}.html`,
+                institute, status: 'active',
                 subCourses: { theory: subTheory, paper: subPaper },
-                payments: {
-                    [getCurrentMonthKey()]: { status: 'unpaid', updatedBy: 'admin' }
-                }
+                payments: { [getCurrentMonthKey()]: { status: 'unpaid', updatedBy: 'admin' } }
             };
 
             usersRef.child(classId).set(newStudentObj, (error) => {
@@ -284,8 +319,7 @@
         }
 
         function toggleBlockStatus(classId, currentStatus) {
-            const newStatus = currentStatus === 'blocked' ? 'active' : 'blocked';
-            usersRef.child(classId).update({ status: newStatus });
+            usersRef.child(classId).update({ status: currentStatus === 'blocked' ? 'active' : 'blocked' });
         }
 
         function removeStudent(classId) {
@@ -296,54 +330,51 @@
 
         function togglePayment(classId, isPaid) {
             const monthKey = getCurrentMonthKey();
-            const status = isPaid ? 'paid' : 'unpaid';
+            
             usersRef.child(`${classId}/payments/${monthKey}`).set({
-                status: status,
+                status: isPaid ? 'paid' : 'unpaid',
                 paidAt: new Date().toISOString().split('T')[0],
                 updatedBy: 'admin'
+            }).then(() => {
+                if (isPaid) {
+                    const notifPayload = {
+                        title: "Payment Confirmed! ✅",
+                        message: `${monthKey} මාසය සඳහා ඔබගේ පන්ති ගාස්තු ගෙවීම සාර්ථකව තහවුරු කරන ලදී. ස්තූතියි!`,
+                        link: "",
+                        createdAt: Date.now()
+                    };
+
+                    db.ref(`notifications/students/${classId}`).push(notifPayload, (err) => {
+                        if (!err) {
+                            alert(`✅ Student ID: ${classId} සඳහා Payment එක Paid වූ අතර Notification එකක්ද යවන ලදී!`);
+                        }
+                    });
+                }
             });
         }
 
         function renderStudentsTable() {
             const tbody = document.getElementById('studentTableBody');
             tbody.innerHTML = '';
-            const searchInput = document.getElementById('studentSearch');
-            const search = searchInput ? (searchInput.value || '').toLowerCase() : '';
+            const search = (document.getElementById('studentSearch')?.value || '').toLowerCase();
 
             Object.keys(allStudents).forEach(key => {
                 const s = allStudents[key];
                 if (!s) return;
-
-                const studentName = (s.name || '').toLowerCase();
-                const studentId = (s.classId || key || '').toLowerCase();
-
-                if (studentName.includes(search) || studentId.includes(search)) {
-                    const row = `
+                if ((s.name || '').toLowerCase().includes(search) || (s.classId || key).toLowerCase().includes(search)) {
+                    tbody.innerHTML += `
                         <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
                             <td class="p-4 font-mono text-cyan-400 font-bold">${s.classId || key}</td>
                             <td class="p-4">${s.name || 'N/A'}</td>
                             <td class="p-4 font-mono text-yellow-400">${s.passcode || 'N/A'}</td>
-                            <td class="p-4">
-                                <span class="bg-cyan-950 text-cyan-300 border border-cyan-800 px-2.5 py-1 rounded-md text-xs">Grade ${s.grade || '-'}</span>
-                                <span class="text-slate-400 text-xs ml-1">(${s.page || 'N/A'})</span>
-                            </td>
+                            <td class="p-4"><span class="bg-cyan-950 text-cyan-300 border border-cyan-800 px-2 py-1 rounded text-xs">Grade ${s.grade || '-'}</span></td>
                             <td class="p-4">${s.institute || 'N/A'}</td>
-                            <td class="p-4">
-                                ${s.status === 'blocked' 
-                                    ? `<span class="bg-red-900/50 text-red-400 border border-red-700 text-xs px-2 py-1 rounded">Blocked</span>` 
-                                    : `<span class="bg-emerald-900/50 text-emerald-400 border border-emerald-700 text-xs px-2 py-1 rounded">Active</span>`}
-                            </td>
+                            <td class="p-4">${s.status === 'blocked' ? `<span class="text-red-400">Blocked</span>` : `<span class="text-emerald-400">Active</span>`}</td>
                             <td class="p-4 text-right flex justify-end gap-2">
-                                <button onclick="toggleBlockStatus('${s.classId || key}', '${s.status}')" class="px-3 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs">
-                                    ${s.status === 'blocked' ? 'Unblock' : 'Block'}
-                                </button>
-                                <button onclick="removeStudent('${s.classId || key}')" class="px-3 py-1 bg-red-900/40 hover:bg-red-800 text-red-300 rounded text-xs border border-red-700">
-                                    Delete
-                                </button>
+                                <button onclick="toggleBlockStatus('${s.classId || key}', '${s.status}')" class="px-3 py-1 bg-slate-700 text-xs rounded">${s.status === 'blocked' ? 'Unblock' : 'Block'}</button>
+                                <button onclick="removeStudent('${s.classId || key}')" class="px-3 py-1 bg-red-900/40 text-red-300 text-xs rounded">Delete</button>
                             </td>
-                        </tr>
-                    `;
-                    tbody.innerHTML += row;
+                        </tr>`;
                 }
             });
         }
@@ -354,91 +385,174 @@
             const monthKey = getCurrentMonthKey();
             const instFilter = document.getElementById('instituteFilter').value;
             const gradeFilter = document.getElementById('gradeFilter').value;
-            const searchInput = document.getElementById('paymentSearch');
-            const search = searchInput ? (searchInput.value || '').toLowerCase() : '';
+            const search = (document.getElementById('paymentSearch')?.value || '').toLowerCase();
             const thirdWeekLocked = isThirdWeekOrLater();
 
             Object.keys(allStudents).forEach(key => {
                 const s = allStudents[key];
                 if (!s) return;
-
-                const studentName = (s.name || '').toLowerCase();
-                const studentId = (s.classId || key || '').toLowerCase();
-                const studentGrade = s.grade ? s.grade.toString() : '';
-                const studentInst = s.institute || '';
-                
-                if (instFilter !== 'ALL' && studentInst !== instFilter) return;
-                if (gradeFilter !== 'ALL' && studentGrade !== gradeFilter) return;
-                if (search && !studentId.includes(search) && !studentName.includes(search)) return;
+                if (instFilter !== 'ALL' && s.institute !== instFilter) return;
+                if (gradeFilter !== 'ALL' && String(s.grade) !== gradeFilter) return;
+                if (search && !(s.classId || key).toLowerCase().includes(search) && !(s.name || '').toLowerCase().includes(search)) return;
 
                 const isPaid = s.payments && s.payments[monthKey] && s.payments[monthKey].status === 'paid';
-                const courseTheory = s.subCourses ? s.subCourses.theory : true;
-                const coursePaper = s.subCourses ? s.subCourses.paper : true;
-
-                const row = `
+                tbody.innerHTML += `
                     <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
                         <td class="p-4 font-mono text-cyan-400">${s.classId || key}</td>
                         <td class="p-4">${s.name || 'N/A'}</td>
-                        <td class="p-4">${studentInst} (Gr. ${s.grade || '-'})</td>
-                        <td class="p-4 text-xs">
-                            ${s.grade === 11 ? `
-                                <span class="${courseTheory ? 'text-emerald-400' : 'text-slate-500'}">Theory: ${courseTheory ? 'Yes' : 'No'}</span> | 
-                                <span class="${coursePaper ? 'text-emerald-400' : 'text-slate-500'}">Paper: ${coursePaper ? 'Yes' : 'No'}</span>
-                            ` : 'N/A'}
-                        </td>
-                        <td class="p-4">
-                            ${thirdWeekLocked && !isPaid 
-                                ? `<span class="text-red-400 text-xs font-semibold"><i class="fa-solid fa-lock"></i> Locked</span>` 
-                                : `<span class="text-emerald-400 text-xs"><i class="fa-solid fa-lock-open"></i> Allowed</span>`}
-                        </td>
-                        <td class="p-4">
-                            ${isPaid 
-                                ? `<span class="bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs px-2.5 py-1 rounded-full">PAID</span>` 
-                                : `<span class="bg-red-950 text-red-400 border border-red-800 text-xs px-2.5 py-1 rounded-full">NOT PAID</span>`}
-                        </td>
-                        <td class="p-4 text-center">
-                            <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-5 h-5 accent-cyan-500 cursor-pointer">
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += row;
+                        <td class="p-4">${s.institute} (Gr. ${s.grade || '-'})</td>
+                        <td class="p-4 text-xs">Theory: ${s.subCourses?.theory ? 'Yes':'No'} | Paper: ${s.subCourses?.paper ? 'Yes':'No'}</td>
+                        <td class="p-4">${thirdWeekLocked && !isPaid ? `<span class="text-red-400 text-xs"><i class="fa-solid fa-lock"></i> Locked</span>` : `<span class="text-emerald-400 text-xs"><i class="fa-solid fa-lock-open"></i> Allowed</span>`}</td>
+                        <td class="p-4">${isPaid ? `<span class="text-emerald-400 font-bold">PAID</span>` : `<span class="text-red-400 font-bold">NOT PAID</span>`}</td>
+                        <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-5 h-5 accent-cyan-500 cursor-pointer"></td>
+                    </tr>`;
             });
         }
 
-        // SECRET PASSCODE FOR YEAR PROMOTION
+        function toggleStudentIdInput() {
+            const target = document.getElementById('notifTargetGrade').value;
+            const box = document.getElementById('singleStudentBox');
+            if (target === "SINGLE_STUDENT") {
+                box.classList.remove('hidden');
+            } else {
+                box.classList.add('hidden');
+            }
+        }
+
+        function sendQuickNotification() {
+            const target = document.getElementById('notifTargetGrade').value;
+            const title = document.getElementById('notifTitle').value.trim();
+            const message = document.getElementById('notifMessage').value.trim();
+            const link = document.getElementById('notifLink').value.trim();
+
+            if (!title || !message) {
+                alert("⚠️ කරුණාකර Title සහ Message ලබා දෙන්න.");
+                return;
+            }
+
+            const notifPayload = { title, message, link: link || "", createdAt: Date.now() };
+
+            let path = "";
+            if (target === "SINGLE_STUDENT") {
+                const studentId = document.getElementById('notifStudentId').value.trim();
+                if (!studentId) {
+                    alert("⚠️ කරුණාකර Student ID එක ඇතුළත් කරන්න.");
+                    return;
+                }
+                path = `notifications/students/${studentId}`;
+            } else if (target === "global") {
+                path = "notifications/global";
+            } else {
+                path = `notifications/${target}`;
+            }
+
+            db.ref(path).push(notifPayload, (err) => {
+                if (!err) {
+                    alert("🚀 Notification එක සාර්ථකව යවන ලදී!");
+                    document.getElementById('notifTitle').value = "";
+                    document.getElementById('notifMessage').value = "";
+                    document.getElementById('notifLink').value = "";
+                    document.getElementById('notifStudentId').value = "";
+                } else {
+                    alert("Error: " + err.message);
+                }
+            });
+        }
+
+        function deleteNotification(path) {
+            if (confirm("මෙම Notification එක මකා දැමීමට අවශ්‍යද?")) {
+                db.ref(path).remove().then(() => alert("Notification එක Delete විය!"));
+            }
+        }
+
+        db.ref('notifications').on('value', (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('adminNotifList');
+            if (!container) return;
+            
+            container.innerHTML = "";
+            if (!data) {
+                container.innerHTML = "<p class='text-slate-500 text-sm text-center py-4'>දැනට සක්‍රීය නොටිෆිකේෂන් නැත.</p>";
+                return;
+            }
+
+            const now = Date.now();
+            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
+            let count = 0;
+
+            const processGroup = (groupObj, groupPath, groupName) => {
+                if (!groupObj) return;
+                Object.keys(groupObj).forEach(key => {
+                    const item = groupObj[key];
+                    const createdTime = item.createdAt || 0;
+
+                    if (now - createdTime > TWENTY_FOUR_HOURS) {
+                        db.ref(`${groupPath}/${key}`).remove();
+                    } else {
+                        count++;
+                        const timeStr = createdTime ? new Date(createdTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A';
+                        container.innerHTML += `
+                            <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center gap-3">
+                                <div class="overflow-hidden">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="bg-cyan-950 text-cyan-400 text-[10px] font-bold px-2 py-0.5 rounded border border-cyan-800 uppercase">${groupName}</span>
+                                        <h4 class="text-sm font-bold text-white truncate">${item.title}</h4>
+                                    </div>
+                                    <p class="text-xs text-slate-400 truncate">${item.message}</p>
+                                    <span class="text-[10px] text-slate-500"><i class="fa-regular fa-clock mr-1"></i>Sent: ${timeStr}</span>
+                                </div>
+                                <button onclick="deleteNotification('${groupPath}/${key}')" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 text-xs font-semibold rounded-lg transition shrink-0">
+                                    <i class="fa-solid fa-trash-can mr-1"></i> Delete
+                                </button>
+                            </div>
+                        `;
+                    }
+                });
+            };
+
+            ['global', 'grade6', 'grade7', 'grade8', 'grade9', 'grade10', 'grade11'].forEach(grp => {
+                if (data[grp]) processGroup(data[grp], `notifications/${grp}`, grp);
+            });
+
+            if (data.students) {
+                Object.keys(data.students).forEach(stId => {
+                    processGroup(data.students[stId], `notifications/students/${stId}`, `ID: ${stId}`);
+                });
+            }
+
+            if (count === 0) {
+                container.innerHTML = "<p class='text-slate-500 text-sm text-center py-4'>දැනට සක්‍රීය නොටිෆිකේෂන් නැත.</p>";
+            }
+        });
+
         function triggerYearPast() {
-            const secretPass = prompt("Enter Secret Admin Passcode for Year Promotion:");
-            // 🔑 SECRET PASSCODE IS: admin123#
+            const secretPass = prompt("Enter Secret Admin Passcode:");
             if (secretPass === "admin123#") {
-                if (confirm("Promote all Grade 6-10 students to the next grade and Grade 11 to Home page?")) {
+                if (confirm("Promote all Grade 6-10 students?")) {
                     const updates = {};
                     Object.keys(allStudents).forEach(key => {
-                        const currentGrade = parseInt(allStudents[key].grade);
-                        if (currentGrade < 11) {
-                            const nextGrade = currentGrade + 1;
-                            updates[`/users/${key}/grade`] = nextGrade;
-                            updates[`/users/${key}/page`] = `grade${nextGrade}.html`;
-                        } else if (currentGrade === 11) {
-                            updates[`/users/${key}/grade`] = "Home"; 
-                            updates[`/users/${key}/page`] = "index.html"; 
+                        const curGrade = parseInt(allStudents[key].grade);
+                        if (curGrade < 11) {
+                            updates[`/users/${key}/grade`] = curGrade + 1;
+                            updates[`/users/${key}/page`] = `grade${curGrade + 1}.html`;
+                        } else if (curGrade === 11) {
+                            updates[`/users/${key}/grade`] = "Home";
+                            updates[`/users/${key}/page`] = "index.html";
                         }
                     });
-
-                    db.ref().update(updates, (err) => {
-                        if (!err) alert("Year promotion completed! Grade pages updated.");
-                        else alert("Promotion failed: " + err.message);
-                    });
+                    db.ref().update(updates, () => alert("Year promotion completed!"));
                 }
-            } else {
-                alert("Incorrect Admin Passcode!");
-            }
+            } else { alert("Incorrect Passcode!"); }
         }
 
         function switchTab(tab) {
             document.getElementById('section-students').classList.toggle('hidden', tab !== 'students');
             document.getElementById('section-payments').classList.toggle('hidden', tab !== 'payments');
+            document.getElementById('section-notifications').classList.toggle('hidden', tab !== 'notifications');
+            
             document.getElementById('btn-tab-students').className = tab === 'students' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
             document.getElementById('btn-tab-payments').className = tab === 'payments' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
+            document.getElementById('btn-tab-notifications').className = tab === 'notifications' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
         }
         function filterStudents() { renderStudentsTable(); }
         function filterPayments() { renderPaymentTable(); }
