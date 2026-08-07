@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -21,137 +22,43 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
         
         <style>
-            #wp{ margin-top: 10px; height: 100px; }
-            #wp1{ margin-left: 20px; height: 100px; }
-            #wp2{ margin-left: 20px; height:100px; }
-            #wp3{ margin-left: 20px; height: 75px; }
-            #wp4{ margin-left: 20px; margin-top: 10px; height: 75px; }
-            .mb-1{ align-items: center; }
+            
+            #wp{
+  margin-top: 10px;
+  height: 100px;
+  
+}
 
-            /* Modern Video Intro Style Loading Screen */
-            #intro-loader {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, #0d1b2a, #1b263b);
-                color: #ffffff;
-                z-index: 99999;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                padding: 20px;
-                transition: opacity 0.8s ease, visibility 0.8s ease;
-            }
+#wp1{
+  margin-left: 20px;
+  height: 100px;
+}
 
-            .intro-step {
-                display: none;
-                animation: fadeInSlide 0.8s ease forwards;
-            }
+#wp2{
+  margin-left: 20px;
+  height:100px;
+}
 
-            .intro-step.active {
-                display: block;
-            }
+#wp3{
+  margin-left: 20px;
+  height: 75px;
+}
 
-            @keyframes fadeInSlide {
-                from { opacity: 0; transform: translateY(20px); }
-                to { opacity: 1; transform: translateY(0); }
-            }
+#wp4{
+  margin-left: 20px;
+  margin-top: 10px;
+  height: 75px;
+}
+.mb-1{
+    align-items: center;
+}
 
-            .feature-icon-box {
-                font-size: 3rem;
-                color: #00d4ff;
-                margin-bottom: 15px;
-            }
-
-            .social-badge {
-                background: rgba(255, 255, 255, 0.1);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                padding: 10px 18px;
-                border-radius: 50px;
-                margin: 6px;
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                font-size: 0.95rem;
-            }
-
-            .progress-bar-container {
-                width: 250px;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: 10px;
-                overflow: hidden;
-                margin-top: 30px;
-            }
-
-            .progress-bar-fill {
-                height: 100%;
-                width: 0%;
-                background: linear-gradient(90deg, #007bff, #00d4ff);
-                transition: width 0.1s linear;
-            }
-
-            #intro-loader.fade-out {
-                opacity: 0;
-                visibility: hidden;
-            }
         </style>
+   
+   
+   
     </head>
     <body class="d-flex flex-column h-100">
-
-        <!-- Modern Video-Style Intro Loader -->
-        <div id="intro-loader">
-            <!-- Step 1: Welcome -->
-            <div class="intro-step active" id="step1">
-                <i class="bi bi-mortarboard-fill feature-icon-box"></i>
-                <h2 class="fw-bold fs-3 text-gradient">Welcome to K Malinda Sri Athugalpura LMS</h2>
-                <p class="text-white-50">ආදරණීය ගණිතය පන්තිය</p>
-            </div>
-
-            <!-- Step 2: Features Showcase -->
-            <div class="intro-step" id="step2">
-                <h4 class="fw-bold mb-4">අපගේ සේවාවන්</h4>
-                <div class="row g-3 justify-content-center">
-                    <div class="col-6 col-md-3">
-                        <i class="bi bi-play-btn-fill fs-2 text-info d-block mb-1"></i>
-                        <span class="small">Online Recordings</span>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <i class="bi bi-headset fs-2 text-info d-block mb-1"></i>
-                        <span class="small">24/7 Support</span>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <i class="bi bi-file-earmark-text-fill fs-2 text-info d-block mb-1"></i>
-                        <span class="small">Paper Classes</span>
-                    </div>
-                    <div class="col-6 col-md-3">
-                        <i class="bi bi-camera-video-fill fs-2 text-info d-block mb-1"></i>
-                        <span class="small">Live Zoom Classes</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Step 3: Contact & Social Info -->
-            <div class="intro-step" id="step3">
-                <h4 class="fw-bold mb-3">අප හා සම්බන්ධ වන්න</h4>
-                <div class="d-flex flex-wrap justify-content-center">
-                    <div class="social-badge"><i class="bi bi-whatsapp text-success"></i> 077 6653500</div>
-                    <div class="social-badge"><i class="bi bi-youtube text-danger"></i> K Malinda Sir</div>
-                    <div class="social-badge"><i class="bi bi-tiktok text-light"></i> Maths with malinda sir</div>
-                    <div class="social-badge"><i class="bi bi-facebook text-primary"></i> K Malinda Sri Athugalpura</div>
-                </div>
-            </div>
-
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" id="progressFill"></div>
-            </div>
-        </div>
-
         <main class="flex-shrink-0">
             <!-- Navigation-->
             <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
@@ -180,59 +87,134 @@
                                 <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">ආද❤️ණීය &middot; ගණිතය &middot; පන්තිය</div></div>
                                 <div class="fs-3 fw-light text-muted">ප්‍රථිඵල මතම හැඩවෙන</div>
                                 <h1 class="display-3 fw-bolder mb-5"><span class="text-gradient d-inline">ආද❤️ණීය ගණිතය පන්තිය</span></h1>
+                               
                             </div>
                         </div>
                         <div class="col-xxl-7">
+                            <!-- Header profile picture-->
                             <div class="d-flex justify-content-center mt-5 mt-xxl-0">
                                 <div class="profile bg-gradient-primary-to-secondary">
+                                    <!-- TIP: For best results, use a photo with a transparent background like the demo example below-->
+                                    <!-- Watch a tutorial on how to do this on YouTube (link)-->
                                     <img class="profile-img" src="pic2.jpg" alt="..." />
+                                    <div class="dots-1">
+                                        <!-- SVG Dots-->
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 191.6 1215.4" style="enable-background: new 0 0 191.6 1215.4" xml:space="preserve">
+                                            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)">
+                                                <path d="M227.7,12788.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,12801.6,289.7,12808.6,227.7,12788.6z"></path>
+                                                <path d="M1507.7,12788.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,12801.6,1569.7,12808.6,1507.7,12788.6z"></path>
+                                                <path d="M227.7,11508.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,11521.6,289.7,11528.6,227.7,11508.6z"></path>
+                                                <path d="M1507.7,11508.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,11521.6,1569.7,11528.6,1507.7,11508.6z"></path>
+                                                <path d="M227.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,10241.6,289.7,10248.6,227.7,10228.6z"></path>
+                                                <path d="M1507.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,10241.6,1569.7,10248.6,1507.7,10228.6z"></path>
+                                                <path d="M227.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,8961.6,289.7,8968.6,227.7,8948.6z"></path>
+                                                <path d="M1507.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,8961.6,1569.7,8968.6,1507.7,8948.6z"></path>
+                                                <path d="M227.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,7681.6,289.7,7688.6,227.7,7668.6z"></path>
+                                                <path d="M1507.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,7681.6,1569.7,7688.6,1507.7,7668.6z"></path>
+                                                <path d="M227.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,6401.6,289.7,6408.6,227.7,6388.6z"></path>
+                                                <path d="M1507.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,6401.6,1569.7,6408.6,1507.7,6388.6z"></path>
+                                                <path d="M227.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,5121.6,289.7,5128.6,227.7,5108.6z"></path>
+                                                <path d="M1507.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,5121.6,1569.7,5128.6,1507.7,5108.6z"></path>
+                                                <path d="M227.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,3841.6,289.7,3848.6,227.7,3828.6z"></path>
+                                                <path d="M1507.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,3841.6,1569.7,3848.6,1507.7,3828.6z"></path>
+                                                <path d="M227.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,2561.6,289.7,2568.6,227.7,2548.6z"></path>
+                                                <path d="M1507.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,2561.6,1569.7,2568.6,1507.7,2548.6z"></path>
+                                                <path d="M227.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,1281.6,289.7,1288.6,227.7,1268.6z"></path>
+                                                <path d="M1507.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,1281.6,1569.7,1288.6,1507.7,1268.6z"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- END of SVG dots-->
+                                    </div>
+                                    <div class="dots-2">
+                                        <!-- SVG Dots-->
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 191.6 1215.4" style="enable-background: new 0 0 191.6 1215.4" xml:space="preserve">
+                                            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)">
+                                                <path d="M227.7,12788.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,12801.6,289.7,12808.6,227.7,12788.6z"></path>
+                                                <path d="M1507.7,12788.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,12801.6,1569.7,12808.6,1507.7,12788.6z"></path>
+                                                <path d="M227.7,11508.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,11521.6,289.7,11528.6,227.7,11508.6z"></path>
+                                                <path d="M1507.7,11508.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,11521.6,1569.7,11528.6,1507.7,11508.6z"></path>
+                                                <path d="M227.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,10241.6,289.7,10248.6,227.7,10228.6z"></path>
+                                                <path d="M1507.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,10241.6,1569.7,10248.6,1507.7,10228.6z"></path>
+                                                <path d="M227.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,8961.6,289.7,8968.6,227.7,8948.6z"></path>
+                                                <path d="M1507.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,8961.6,1569.7,8968.6,1507.7,8948.6z"></path>
+                                                <path d="M227.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,7681.6,289.7,7688.6,227.7,7668.6z"></path>
+                                                <path d="M1507.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,7681.6,1569.7,7688.6,1507.7,7668.6z"></path>
+                                                <path d="M227.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,6401.6,289.7,6408.6,227.7,6388.6z"></path>
+                                                <path d="M1507.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,6401.6,1569.7,6408.6,1507.7,6388.6z"></path>
+                                                <path d="M227.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,5121.6,289.7,5128.6,227.7,5108.6z"></path>
+                                                <path d="M1507.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,5121.6,1569.7,5128.6,1507.7,5108.6z"></path>
+                                                <path d="M227.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,3841.6,289.7,3848.6,227.7,3828.6z"></path>
+                                                <path d="M1507.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,3841.6,1569.7,3848.6,1507.7,3828.6z"></path>
+                                                <path d="M227.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,2561.6,289.7,2568.6,227.7,2548.6z"></path>
+                                                <path d="M1507.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,2561.6,1569.7,2568.6,1507.7,2548.6z"></path>
+                                                <path d="M227.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,1281.6,289.7,1288.6,227.7,1268.6z"></path>
+                                                <path d="M1507.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,1281.6,1569.7,1288.6,1507.7,1268.6z"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- END of SVG dots-->
+                                    </div>
+                                    <div class="dots-3">
+                                        <!-- SVG Dots-->
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 191.6 1215.4" style="enable-background: new 0 0 191.6 1215.4" xml:space="preserve">
+                                            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)">
+                                                <path d="M227.7,12788.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,12801.6,289.7,12808.6,227.7,12788.6z"></path>
+                                                <path d="M1507.7,12788.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,12801.6,1569.7,12808.6,1507.7,12788.6z"></path>
+                                                <path d="M227.7,11508.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,11521.6,289.7,11528.6,227.7,11508.6z"></path>
+                                                <path d="M1507.7,11508.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,11521.6,1569.7,11528.6,1507.7,11508.6z"></path>
+                                                <path d="M227.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,10241.6,289.7,10248.6,227.7,10228.6z"></path>
+                                                <path d="M1507.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,10241.6,1569.7,10248.6,1507.7,10228.6z"></path>
+                                                <path d="M227.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,8961.6,289.7,8968.6,227.7,8948.6z"></path>
+                                                <path d="M1507.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,8961.6,1569.7,8968.6,1507.7,8948.6z"></path>
+                                                <path d="M227.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,7681.6,289.7,7688.6,227.7,7668.6z"></path>
+                                                <path d="M1507.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,7681.6,1569.7,7688.6,1507.7,7668.6z"></path>
+                                                <path d="M227.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,6401.6,289.7,6408.6,227.7,6388.6z"></path>
+                                                <path d="M1507.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,6401.6,1569.7,6408.6,1507.7,6388.6z"></path>
+                                                <path d="M227.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,5121.6,289.7,5128.6,227.7,5108.6z"></path>
+                                                <path d="M1507.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,5121.6,1569.7,5128.6,1507.7,5108.6z"></path>
+                                                <path d="M227.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,3841.6,289.7,3848.6,227.7,3828.6z"></path>
+                                                <path d="M1507.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,3841.6,1569.7,3848.6,1507.7,3828.6z"></path>
+                                                <path d="M227.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,2561.6,289.7,2568.6,227.7,2548.6z"></path>
+                                                <path d="M1507.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,2561.6,1569.7,2568.6,1507.7,2548.6z"></path>
+                                                <path d="M227.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,1281.6,289.7,1288.6,227.7,1268.6z"></path>
+                                                <path d="M1507.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,1281.6,1569.7,1288.6,1507.7,1268.6z"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- END of SVG dots-->
+                                    </div>
+                                    <div class="dots-4">
+                                        <!-- SVG Dots-->
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 191.6 1215.4" style="enable-background: new 0 0 191.6 1215.4" xml:space="preserve">
+                                            <g transform="translate(0.000000,1280.000000) scale(0.100000,-0.100000)">
+                                                <path d="M227.7,12788.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,12801.6,289.7,12808.6,227.7,12788.6z"></path>
+                                                <path d="M1507.7,12788.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,12801.6,1569.7,12808.6,1507.7,12788.6z"></path>
+                                                <path d="M227.7,11508.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,11521.6,289.7,11528.6,227.7,11508.6z"></path>
+                                                <path d="M1507.7,11508.6c-151-50-253-216-222-362c25-119,136-230,254-255c194-41,395,142,375,339c-11,105-90,213-190,262        C1663.7,11521.6,1569.7,11528.6,1507.7,11508.6z"></path>
+                                                <path d="M227.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,10241.6,289.7,10248.6,227.7,10228.6z"></path>
+                                                <path d="M1507.7,10228.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,10241.6,1569.7,10248.6,1507.7,10228.6z"></path>
+                                                <path d="M227.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,8961.6,289.7,8968.6,227.7,8948.6z"></path>
+                                                <path d="M1507.7,8948.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,8961.6,1569.7,8968.6,1507.7,8948.6z"></path>
+                                                <path d="M227.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,7681.6,289.7,7688.6,227.7,7668.6z"></path>
+                                                <path d="M1507.7,7668.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,7681.6,1569.7,7688.6,1507.7,7668.6z"></path>
+                                                <path d="M227.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,6401.6,289.7,6408.6,227.7,6388.6z"></path>
+                                                <path d="M1507.7,6388.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,6401.6,1569.7,6408.6,1507.7,6388.6z"></path>
+                                                <path d="M227.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,5121.6,289.7,5128.6,227.7,5108.6z"></path>
+                                                <path d="M1507.7,5108.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,5121.6,1569.7,5128.6,1507.7,5108.6z"></path>
+                                                <path d="M227.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,3841.6,289.7,3848.6,227.7,3828.6z"></path>
+                                                <path d="M1507.7,3828.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,3841.6,1569.7,3848.6,1507.7,3828.6z"></path>
+                                                <path d="M227.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,2561.6,289.7,2568.6,227.7,2548.6z"></path>
+                                                <path d="M1507.7,2548.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,2561.6,1569.7,2568.6,1507.7,2548.6z"></path>
+                                                <path d="M227.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C383.7,1281.6,289.7,1288.6,227.7,1268.6z"></path>
+                                                <path d="M1507.7,1268.6c-105-35-200-141-222-248c-43-206,163-412,369-369c155,32,275,190,260,339c-11,105-90,213-190,262        C1663.7,1281.6,1569.7,1288.6,1507.7,1268.6z"></path>
+                                            </g>
+                                        </svg>
+                                        <!-- END of SVG dots-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
-
-            <!-- Features Section -->
-            <section class="py-5 bg-white">
-                <div class="container px-5">
-                    <div class="text-center mb-5">
-                        <h2 class="fw-bolder"><span class="text-gradient d-inline">අපගේ විශේෂත්වයන්</span></h2>
-                        <p class="lead fw-light text-muted">ඔබට හිමිවන ප්‍රධාන පහසුකම්</p>
-                    </div>
-                    <div class="row g-4 text-center">
-                        <div class="col-md-3">
-                            <div class="p-4 shadow-sm rounded-4 border">
-                                <i class="bi bi-play-btn-fill fs-1 text-primary mb-3"></i>
-                                <h5 class="fw-bold">Recordings</h5>
-                                <p class="text-muted small">මගහැරුණු හෝ නැවත නැරඹීමට අවශ්‍ය පාඩම් පහසුවෙන් නරඹන්න.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-4 shadow-sm rounded-4 border">
-                                <i class="bi bi-headset fs-1 text-primary mb-3"></i>
-                                <h5 class="fw-bold">24/7 Support</h5>
-                                <p class="text-muted small">ගණිත ගැටලු සහ තාක්ෂණික සහය ඕනෑම වෙලාවක ලබාගන්න.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-4 shadow-sm rounded-4 border">
-                                <i class="bi bi-file-earmark-text-fill fs-1 text-primary mb-3"></i>
-                                <h5 class="fw-bold">Paper Classes</h5>
-                                <p class="text-muted small">ප්‍රශ්න පත්‍ර සාකච්ඡා සහ විභාග සඳහා විශේෂ පුහුණුව.</p>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="p-4 shadow-sm rounded-4 border">
-                                <i class="bi bi-camera-video-fill fs-1 text-primary mb-3"></i>
-                                <h5 class="fw-bold">Live Classes</h5>
-                                <p class="text-muted small">සජීවීව පන්ති සමඟ සම්බන්ධ වී ප්‍රශ්න යොමු කරන්න.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- About Section-->
             <section class="bg-light py-5">
                 <div class="container px-5">
@@ -241,12 +223,20 @@
                             <div class="text-center my-5">
                                 <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">About Me</span></h2>
                                 <p class="lead fw-light mb-4">I'm K.Malinda Sri Athugalpura</p>
+                                <p class="text-muted"></p>
                                 <div class="d-flex justify-content-center fs-2 gap-4">
                                     <div class="proPic">
                                         <img src="pic1.jpg" alt="picture">
                                         <br><br>
                                         <p><button type="button" class="btn btn-outline-primary" id="aboutBtn">See More -></button></p>
+                                        
+                                          
                                     </div>
+                                    
+                                    
+                                    
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
@@ -255,7 +245,7 @@
             </section>
         </main>
 
-        <!-- Portfolio -->
+        <!--Portfolio-->
         <section class="navbar navbar-expand-lg navbar-light bg-white py-3">
             <div class="container px-5">
                 <div class="row gx-5 justify-content-center">
@@ -263,115 +253,175 @@
                         <div class="text-center my-5">
                             <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Portfolio</span></h2>
                             <p class="lead fw-light mb-4">I AM NOT DESIGNED TO COME 2nd OR 3rd <strong>I AM DESIGNED TO WIN</strong></p>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                                    <img src="gallery1.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 1" />
-                                    <img src="gallery2.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 2" />
-                                </div>
-                                <div class="col-lg-4 mb-4 mb-lg-0">
-                                    <img src="aboutpropic.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="About Pic" />
-                                    <img src="gallery4.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 4" />
-                                </div>
-                                <div class="col-lg-4 mb-4 mb-lg-0">
-                                    <img src="gallery3 (1).png" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 3" />
-                                    <img src="gallery5 .jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 5" />
-                                </div>
+                            <p class="text-muted"></p>
+                            <div class="d-flex justify-content-center fs-2 gap-4">
+                               
+                                                            <!-- Gallery -->
+<div class="row">
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+      <img
+        src="gallery1.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water"
+      />
+  
+      <img
+        src="gallery2.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Wintry Mountain Landscape"
+      />
+    </div>
+  
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img
+        src="aboutpropic.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Mountains in the Clouds"
+      />
+  
+      <img
+        src="gallery4.jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water"
+      />
+    </div>
+  
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img
+        src="gallery3 (1).png"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Waves at Sea"
+      />
+  
+      <img
+        src="gallery5 .jpg"
+        class="w-100 shadow-1-strong rounded mb-4"
+        alt="Yosemite National Park"
+      />
+    </div>
+  </div>
+  <!-- Gallery -->
+
                             </div>
+ 
+                            </div>
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Videos Section-->
-        <section class="bg-light py-5">
-            <div class="container px-5">
-                <div class="row gx-5 justify-content-center">
-                    <div class="col-xxl-8">
-                        <div class="text-center my-5">
-                            <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Videos</span></h2>
-                            <p class="lead fw-light mb-4">You can get more thing from this</p>
-                            <div class="d-flex justify-content-center fs-2 gap-4 flex-column align-items-center">
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/d7wWL38jP4g" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+
+ 
+ <!-- videoes Section-->
+ <section class="bg-light py-5">
+    <div class="container px-5">
+        <div class="row gx-5 justify-content-center">
+            <div class="col-xxl-8">
+                <div class="text-center my-5">
+                    <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Videos</span></h2>
+                    <p class="lead fw-light mb-4">You can get more thing from this</p>
+                    <p class="text-muted"></p>
+                    <div class="d-flex justify-content-center fs-2 gap-4">
+                        <div class="proPic">
+                            
+                              
+                                <iframe width="320" height="240" src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <br>
+                                <iframe width="320" height="240" src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <br>
+                                <iframe width="320" height="240" src="https://www.youtube.com/embed/d7wWL38jP4g" title="ආද❤️ණීය ගණිතය පන්තියෙ web site එකෙන් Recordings  Mobile Phone එකෙන් බලන ආකාරය" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                                <br>
+                               
+                            
+            
+                              
+                             
+                        </div>
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+
+
+
+
+
+
+
+                <!--institite-->
+                <section class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                    <div class="container px-5">
+                        <div class="row gx-5 justify-content-center">
+                            <div class="col-xxl-8">
+                                <div class="text-center my-5">
+                                    <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Institutes</span></h2>
+                                    <p class="lead fw-light mb-4"></p>
+                                    <p class="text-muted">Welcome to one of the leading Mathematics tuition institutes, where excellence meets experience. With multiple trusted institutes across the region, we specialize in delivering high-quality Mathematics education through physical hall classes for students who aim to master the subject with confidence.
+
+                                        Led by a passionate and experienced Mathematics teacher, our classes are designed to make complex concepts simple, helping students from various grades strengthen their problem-solving skills and achieve top exam results. Each session is tailored to provide focused attention, interactive learning, and a structured approach to ensure success in both school and competitive exams.
+                                        
+                                        Join us at our physical classes and experience a results-driven learning environment that brings out the best in every student.
+                                        
+                                        </p>
+                                    <div class="d-flex justify-content-center fs-2 gap-4">
+                                       
+                                        <p class="mb-1">
+                                            <a href="#">
+                                                <img src="in1.jpg" alt="icon" id="wp" > 
+                                            </a>
+                                
+                                            <a href="#">
+                                            <img src="in2.jpg" alt="facebook" id="wp1">
+                                            </a>
+                                
+                                            <a href="#">
+                                            <img src="in4.jpg" alt="instragram" id="wp2">
+                                            </a>
+                                
+                                            
+                                        </p>
+        
+                                    </div>
+         
+                                    </div>
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
+                </section>
 
-        <!-- Institutes -->
-        <section class="bg-white py-5">
-            <div class="container px-5">
-                <div class="row gx-5 justify-content-center">
-                    <div class="col-xxl-8 text-center my-5">
-                        <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Institutes</span></h2>
-                        <p class="text-muted">Welcome to one of the leading Mathematics tuition institutes, where excellence meets experience.</p>
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
-                            <a href="#"><img src="in1.jpg" alt="icon" id="wp" /></a>
-                            <a href="#"><img src="in2.jpg" alt="facebook" id="wp1" /></a>
-                            <a href="#"><img src="in4.jpg" alt="instagram" id="wp2" /></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
 
         <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto border-top">
+        <footer class="bg-white py-4 mt-auto">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
-                    <div class="col-auto"><div class="small m-0">&copy; ආද❤️ණීය ගණිතය පන්තිය 2026</div></div>
+                    <div class="col-auto"><div class="small m-0"> &copy; ආද❤️ණීය ගණිතය පන්තිය 2025</div></div>
                     <div class="col-auto">
-                        <a href="https://wa.me/94776653500" class="text-decoration-none me-3"><i class="bi bi-whatsapp"></i> 077 6653500</a>
-                        <a href="#" class="text-decoration-none me-3"><i class="bi bi-youtube text-danger"></i> K Malinda Sir</a>
-                        <a href="#" class="text-decoration-none me-3"><i class="bi bi-tiktok text-dark"></i> Maths with malinda sir</a>
-                        <a href="#" class="text-decoration-none"><i class="bi bi-facebook"></i> K Malinda Sri Athugalpura</a>
+                        
                     </div>
                 </div>
             </div>
         </footer>
-
-        <!-- Scripts -->
+        <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
         <script src="scripts.js"></script>
         <script>
-            document.getElementById('rec').addEventListener('click', function() {
-                window.location.href = 'record.html';
-            });
-
-            // Intro Loader Video Animation Controller
-            const totalDuration = 4500; // 4.5 seconds total intro
-            const fillElement = document.getElementById("progressFill");
-            let progress = 0;
-
-            const progressInterval = setInterval(() => {
-                progress += 2;
-                if (progress <= 100) {
-                    fillElement.style.width = progress + "%";
-                }
-            }, totalDuration / 50);
-
-            // Step 1 -> Step 2
-            setTimeout(() => {
-                document.getElementById("step1").classList.remove("active");
-                document.getElementById("step2").classList.add("active");
-            }, 1500);
-
-            // Step 2 -> Step 3
-            setTimeout(() => {
-                document.getElementById("step2").classList.remove("active");
-                document.getElementById("step3").classList.add("active");
-            }, 3000);
-
-            // Hide Loader
-            setTimeout(() => {
-                const loader = document.getElementById("intro-loader");
-                loader.classList.add("fade-out");
-                clearInterval(progressInterval);
-            }, totalDuration);
-        </script>
+  document.getElementById('rec').addEventListener('click', function() {
+    window.location.href = 'record.html'; // Replace with your page URL
+  });
+</script>
     </body>
 </html>
