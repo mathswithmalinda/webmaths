@@ -8,24 +8,41 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+    <style>
+        /* Custom smooth scrollbar for notifications */
+        .custom-scroll::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 8px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+    </style>
 </head>
 <body class="bg-slate-900 text-slate-100 font-sans min-h-screen pb-20">
 
     <!-- Navbar -->
-    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 flex justify-between items-center shadow-lg">
+    <nav class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3 shadow-lg">
         <div class="flex items-center gap-3">
             <i class="fa-solid fa-graduation-cap text-2xl text-cyan-400"></i>
-            <h1 class="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Maths with Malinda Sir - Admin</h1>
+            <h1 class="text-lg sm:text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Maths with Malinda Sir - Admin</h1>
         </div>
-        <div class="flex gap-2">
-            <button onclick="switchTab('students')" id="btn-tab-students" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white">
-                <i class="fa-solid fa-users mr-2"></i>Students
+        <div class="flex gap-2 w-full sm:w-auto justify-center">
+            <button onclick="switchTab('students')" id="btn-tab-students" class="px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial">
+                <i class="fa-solid fa-users sm:mr-2"></i><span class="hidden sm:inline">Students</span>
             </button>
-            <button onclick="switchTab('payments')" id="btn-tab-payments" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600">
-                <i class="fa-solid fa-credit-card mr-2"></i>Payments
+            <button onclick="switchTab('payments')" id="btn-tab-payments" class="px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial">
+                <i class="fa-solid fa-credit-card sm:mr-2"></i><span class="hidden sm:inline">Payments</span>
             </button>
-            <button onclick="switchTab('notifications')" id="btn-tab-notifications" class="px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600">
-                <i class="fa-solid fa-bell mr-2"></i>Send Notif
+            <button onclick="switchTab('notifications')" id="btn-tab-notifications" class="px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial">
+                <i class="fa-solid fa-bell sm:mr-2"></i><span class="hidden sm:inline">Send Notif</span>
             </button>
         </div>
     </nav>
@@ -44,7 +61,7 @@
                 </button>
             </div>
 
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-6">
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-4 sm:p-6">
                 <div class="flex flex-col md:flex-row gap-4 mb-6">
                     <div class="relative flex-1">
                         <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
@@ -92,7 +109,7 @@
                     <h2 class="text-2xl font-bold text-white">Payment Management Panel</h2>
                     <p class="text-slate-400 text-sm">Tick කළ සැනින් අදාළ Student ID එකට ස්වයංක්‍රීයව "Payment Confirmed" Message එකක් යැවේ.</p>
                 </div>
-                <select id="instituteFilter" onchange="filterPayments()" class="bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5">
+                <select id="instituteFilter" onchange="filterPayments()" class="w-full md:w-auto bg-slate-900 border border-slate-700 text-slate-200 text-sm rounded-xl px-4 py-2.5">
                     <option value="ALL">All Institutes</option>
                     <option value="The Tutor">The Tutor</option>
                     <option value="Nimthera">Nimthera</option>
@@ -118,7 +135,8 @@
                 </select>
             </div>
 
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
+            <!-- Desktop View Table -->
+            <div class="hidden md:block bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
                 <table class="w-full text-left text-sm text-slate-300">
                     <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
                         <tr>
@@ -134,6 +152,9 @@
                     <tbody id="paymentTableBody"></tbody>
                 </table>
             </div>
+
+            <!-- Mobile Responsive View Cards -->
+            <div id="paymentMobileCards" class="grid grid-cols-1 gap-4 md:hidden"></div>
         </div>
 
         <!-- SECTION 3: NOTIFICATION BROADCAST & MANAGEMENT -->
@@ -183,12 +204,12 @@
                     </div>
                 </div>
 
-                <!-- Active Notifications List -->
-                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col">
+                <!-- Active Notifications List (Scroll Optimized) -->
+                <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col max-h-[600px]">
                     <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-list-check text-cyan-400 mr-2"></i>Active Notifications</h2>
                     <p class="text-slate-400 text-xs mb-4">මෙහි ඇති Delete බටන් එකෙන් Notification එකක් මකා දැමූ විට සියලුම සිසුන්ගෙන් සෘජුවම ඉවත් වේ. පැය 24 පහු වූ ඒවා auto-delete වේ.</p>
                     
-                    <div id="adminNotifList" class="space-y-3 overflow-y-auto max-h-[420px] pr-2">
+                    <div id="adminNotifList" class="space-y-3 overflow-y-auto custom-scroll pr-2 touch-pan-y overscroll-contain flex-1">
                         <p class="text-slate-500 text-sm text-center py-4">Loading active notifications...</p>
                     </div>
                 </div>
@@ -241,10 +262,10 @@
                     <label class="block text-xs font-semibold text-slate-400 mb-2">COURSE ACCESS TYPE</label>
                     <div class="flex gap-4">
                         <label class="flex items-center text-sm gap-2 text-slate-300">
-                            <input type="checkbox" id="subTheory" checked class="accent-cyan-500"> Theory
+                            <input type="checkbox" id="subTheory" checked class="accent-cyan-500 w-4 h-4"> Theory
                         </label>
                         <label class="flex items-center text-sm gap-2 text-slate-300">
-                            <input type="checkbox" id="subPaper" checked class="accent-cyan-500"> Paper Class
+                            <input type="checkbox" id="subPaper" checked class="accent-cyan-500 w-4 h-4"> Paper Class
                         </label>
                     </div>
                 </div>
@@ -381,7 +402,10 @@
 
         function renderPaymentTable() {
             const tbody = document.getElementById('paymentTableBody');
+            const mobileCards = document.getElementById('paymentMobileCards');
             tbody.innerHTML = '';
+            mobileCards.innerHTML = '';
+
             const monthKey = getCurrentMonthKey();
             const instFilter = document.getElementById('instituteFilter').value;
             const gradeFilter = document.getElementById('gradeFilter').value;
@@ -396,6 +420,8 @@
                 if (search && !(s.classId || key).toLowerCase().includes(search) && !(s.name || '').toLowerCase().includes(search)) return;
 
                 const isPaid = s.payments && s.payments[monthKey] && s.payments[monthKey].status === 'paid';
+                
+                // Desktop Row
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
                         <td class="p-4 font-mono text-cyan-400">${s.classId || key}</td>
@@ -404,8 +430,35 @@
                         <td class="p-4 text-xs">Theory: ${s.subCourses?.theory ? 'Yes':'No'} | Paper: ${s.subCourses?.paper ? 'Yes':'No'}</td>
                         <td class="p-4">${thirdWeekLocked && !isPaid ? `<span class="text-red-400 text-xs"><i class="fa-solid fa-lock"></i> Locked</span>` : `<span class="text-emerald-400 text-xs"><i class="fa-solid fa-lock-open"></i> Allowed</span>`}</td>
                         <td class="p-4">${isPaid ? `<span class="text-emerald-400 font-bold">PAID</span>` : `<span class="text-red-400 font-bold">NOT PAID</span>`}</td>
-                        <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-5 h-5 accent-cyan-500 cursor-pointer"></td>
+                        <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-6 h-6 accent-cyan-500 cursor-pointer"></td>
                     </tr>`;
+
+                // Mobile Card View
+                mobileCards.innerHTML += `
+                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-lg flex flex-col gap-3">
+                        <div class="flex justify-between items-start border-b border-slate-700/60 pb-2">
+                            <div>
+                                <span class="font-mono text-cyan-400 font-bold text-base">${s.classId || key}</span>
+                                <h3 class="text-white font-semibold text-sm">${s.name || 'N/A'}</h3>
+                            </div>
+                            <span class="text-xs px-2.5 py-1 rounded-lg ${isPaid ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-red-950 text-red-400 border border-red-800'} font-bold">
+                                ${isPaid ? 'PAID' : 'NOT PAID'}
+                            </span>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
+                            <div><strong class="text-slate-300">Grade & Inst:</strong> Gr.${s.grade || '-'} - ${s.institute}</div>
+                            <div><strong class="text-slate-300">Courses:</strong> T:${s.subCourses?.theory ? 'Y':'N'} | P:${s.subCourses?.paper ? 'Y':'N'}</div>
+                            <div><strong class="text-slate-300">State:</strong> ${thirdWeekLocked && !isPaid ? '<span class="text-red-400">Locked</span>' : '<span class="text-emerald-400">Allowed</span>'}</div>
+                        </div>
+
+                        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-700/50 mt-1">
+                            <span class="text-xs font-semibold text-slate-300">Toggle Payment & Send Notif:</span>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-6 h-6 accent-cyan-500 rounded">
+                            </label>
+                        </div>
+                    </div>`;
             });
         }
 
@@ -550,9 +603,9 @@
             document.getElementById('section-payments').classList.toggle('hidden', tab !== 'payments');
             document.getElementById('section-notifications').classList.toggle('hidden', tab !== 'notifications');
             
-            document.getElementById('btn-tab-students').className = tab === 'students' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
-            document.getElementById('btn-tab-payments').className = tab === 'payments' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
-            document.getElementById('btn-tab-notifications').className = tab === 'notifications' ? 'px-4 py-2 rounded-lg font-medium text-sm transition bg-cyan-600 text-white' : 'px-4 py-2 rounded-lg font-medium text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600';
+            document.getElementById('btn-tab-students').className = tab === 'students' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
+            document.getElementById('btn-tab-payments').className = tab === 'payments' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
+            document.getElementById('btn-tab-notifications').className = tab === 'notifications' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
         }
         function filterStudents() { renderStudentsTable(); }
         function filterPayments() { renderPaymentTable(); }
