@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player - ආද❤️ණීය ගණිතය පන්තිය</title>
+    <title>Video Player - ආදරණීය ගණිතය පන්තිය</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -13,22 +13,54 @@
             user-select: none;
             -webkit-user-select: none;
             overflow-x: hidden;
+            font-family: system-ui, -apple-system, sans-serif;
         }
 
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 12px;
+        }
+
+        /* Mobile Responsive Header */
+        .player-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .btn-back {
+            padding: 6px 16px;
+            font-size: 13px;
+            border-radius: 50px;
+        }
+
+        .header-title {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 576px) {
+            .header-title { font-size: 12px; }
+            .btn-back { padding: 5px 12px; font-size: 12px; }
+        }
+
+        /* Video Container */
         .player-container {
             position: relative;
             width: 100%;
-            max-width: 900px;
-            margin: 30px auto;
             background: #000;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
         }
@@ -40,106 +72,285 @@
             width: 100%;
             height: 100%;
             border: 0;
+            pointer-events: none; /* Disables all clicks on YouTube native elements */
         }
 
-        /* Transparent Blocking Overlays (Prevents YouTube/More Videos clicks) */
-        
-        /* Blocks Top Title & Share buttons */
-        .block-top {
+        /* 100% Full Click Shield to prevent YT interactions */
+        .full-shield {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 60px;
+            height: calc(100% - 48px);
             z-index: 10;
             background: transparent;
-            pointer-events: auto;
         }
 
-        /* Blocks YouTube Logo & More Videos button on Pause/Hover */
-        .block-bottom-right {
+        /* Custom Control Bar Styling */
+        .custom-controls {
             position: absolute;
             bottom: 0;
-            right: 0;
-            width: 45%;
-            height: 65px;
-            z-index: 10;
-            background: transparent;
-            pointer-events: auto;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            background: rgba(13, 17, 23, 0.95);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 10px;
+            z-index: 20;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Dynamic Moving Watermark Overlay */
+        .control-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .control-btn:hover {
+            color: #0dcaf0;
+        }
+
+        .seek-bar {
+            flex-grow: 1;
+            accent-color: #0dcaf0;
+            cursor: pointer;
+            height: 4px;
+        }
+
+        .time-display {
+            font-size: 11px;
+            color: #aaa;
+            white-space: nowrap;
+        }
+
+        /* Watermark */
         #watermark {
             position: absolute;
-            z-index: 99;
-            color: rgba(255, 255, 255, 0.45);
-            font-size: 16px;
-            font-weight: bold;
+            z-index: 15;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
+            font-weight: 600;
             font-family: sans-serif;
             pointer-events: none;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
             transition: all 3s ease-in-out;
-            padding: 6px 14px;
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 8px;
+            padding: 3px 8px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 4px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
+        }
+
+        /* Fullscreen styles */
+        .player-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
+        }
+
+        .player-container:fullscreen .video-wrapper {
+            height: calc(100vh - 48px);
+            padding-bottom: 0;
+        }
+
+        /* Zoom Box */
+        .zoom-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            text-align: center;
+            background: #161b22;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
     </style>
 </head>
 <body>
 
-    <div class="container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <button onclick="history.back()" class="btn btn-outline-light rounded-pill px-4">
-                <i class="bi bi-arrow-left me-2"></i> ආපසු යන්න (Back)
+    <div class="main-container">
+        <!-- Header -->
+        <div class="player-header">
+            <button onclick="history.back()" class="btn btn-outline-light btn-back">
+                <i class="bi bi-arrow-left me-1"></i> ආපසු (Back)
             </button>
-            <span class="text-info fw-bold">ආද❤️ණීය ගණිතය පන්තිය Secure Player</span>
+            <span class="text-info header-title">ආදරණීය ගණිතය Secure Player</span>
         </div>
 
-        <div class="player-container">
+        <!-- Video Player Section -->
+        <div id="videoSection" class="player-container">
             <div class="video-wrapper">
-                <!-- Transparent Blocking Layers -->
-                <div class="block-top"></div>
-                <div class="block-bottom-right"></div>
-
                 <!-- Watermark -->
-                <div id="watermark">Loading User Info...</div>
+                <div id="watermark">Loading User...</div>
+
+                <!-- Full Shield overlay prevents clicking YT UI -->
+                <div class="full-shield" onclick="togglePlay()"></div>
                 
-                <!-- YouTube Embedded Player -->
-                <iframe id="ytPlayer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <!-- YT Player Frame -->
+                <div id="ytPlayer"></div>
             </div>
+
+            <!-- Custom Safe Controls -->
+            <div class="custom-controls">
+                <button class="control-btn" onclick="togglePlay()"><i id="playIcon" class="bi bi-play-fill"></i></button>
+                <span id="currentTime" class="time-display">0:00</span>
+                <input type="range" id="seekBar" class="seek-bar" value="0" max="100" oninput="seekVideo(this.value)">
+                <span id="durationTime" class="time-display">0:00</span>
+                <button class="control-btn" onclick="toggleMute()"><i id="muteIcon" class="bi bi-volume-up-fill"></i></button>
+                <button class="control-btn" onclick="toggleCustomFullScreen()"><i class="bi bi-fullscreen"></i></button>
+            </div>
+        </div>
+
+        <!-- Zoom Section -->
+        <div id="zoomSection" class="zoom-box d-none">
+            <i class="bi bi-camera-video text-info fs-1 mb-3"></i>
+            <h4 class="text-white mb-2">Live Zoom Class Link</h4>
+            <p class="text-secondary text-sm mb-4">ඔබගේ පන්තිය Zoom ඔස්සේ සක්‍රීයව පවතී. පහත බටන් එක ක්ලික් කර පන්තියට සම්බන්ධ වන්න.</p>
+            <a id="zoomJoinBtn" href="#" target="_blank" class="btn btn-info btn-lg rounded-pill px-5 fw-bold text-dark">
+                <i class="bi bi-box-arrow-up-right me-2"></i> Join Zoom Class
+            </a>
         </div>
     </div>
 
+    <!-- YouTube API Script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // 1. Get Video ID from URL Parameters
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('v');
+        const zoomUrl = urlParams.get('zoom');
 
-        if (videoId) {
-            // Parameters:
-            // rel=0 -> Recommendations only from same channel
-            // modestbranding=1 -> Minimizes YT Branding
-            // controls=1 -> Keeps basic controls
-            // fs=1 -> Enables Fullscreen
-            document.getElementById('ytPlayer').src = `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1&iv_load_policy=3&controls=1&fs=1`;
-        } else {
-            alert("⚠️ Invalid Video URL!");
-            history.back();
+        let player;
+        let isMuted = false;
+
+        if (zoomUrl) {
+            document.getElementById('videoSection').classList.add('d-none');
+            document.getElementById('zoomSection').classList.remove('d-none');
+            document.getElementById('zoomJoinBtn').href = decodeURIComponent(zoomUrl);
         }
 
-        // 2. Setup Watermark (Student Name + Student ID)
+        // Initialize Secure YouTube API Player
+        function onYouTubeIframeAPIReady() {
+            if (!videoId) return;
+
+            player = new YT.Player('ytPlayer', {
+                videoId: videoId,
+                playerVars: {
+                    'controls': 0,        // Hide ALL YouTube Native Controls
+                    'cc_load_policy': 0, // Disable Closed Captions / Subtitles by default
+                    'cc_lang_pref': 'none',
+                    'modestbranding': 1, // Remove YT Branding
+                    'rel': 0,            // Hide related videos
+                    'showinfo': 0,       // Hide video title
+                    'fs': 0,             // Hide native fullscreen button
+                    'iv_load_policy': 3, // Hide annotations
+                    'disablekb': 1       // Disable keyboard shortcuts
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            // Forcefully unload caption modules if present
+            if (player.unloadModule) {
+                player.unloadModule('captions');
+                player.unloadModule('cc');
+            }
+            updateTimer();
+            setInterval(updateTimer, 500);
+        }
+
+        function onPlayerStateChange(event) {
+            const playIcon = document.getElementById('playIcon');
+            if (event.data === YT.PlayerState.PLAYING) {
+                playIcon.className = 'bi bi-pause-fill';
+                // Double check to turn off captions on play
+                if (player.unloadModule) {
+                    player.unloadModule('captions');
+                }
+            } else {
+                playIcon.className = 'bi bi-play-fill';
+            }
+        }
+
+        function togglePlay() {
+            if (!player) return;
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+
+        function seekVideo(value) {
+            if (!player) return;
+            const duration = player.getDuration();
+            const targetTime = (value / 100) * duration;
+            player.seekTo(targetTime, true);
+        }
+
+        function toggleMute() {
+            if (!player) return;
+            const muteIcon = document.getElementById('muteIcon');
+            if (isMuted) {
+                player.unMute();
+                muteIcon.className = 'bi bi-volume-up-fill';
+            } else {
+                player.mute();
+                muteIcon.className = 'bi bi-volume-mute-fill';
+            }
+            isMuted = !isMuted;
+        }
+
+        function updateTimer() {
+            if (!player || !player.getCurrentTime) return;
+            const currentTime = player.getCurrentTime() || 0;
+            const duration = player.getDuration() || 0;
+
+            document.getElementById('currentTime').innerText = formatTime(currentTime);
+            document.getElementById('durationTime').innerText = formatTime(duration);
+            
+            if (duration > 0) {
+                document.getElementById('seekBar').value = (currentTime / duration) * 100;
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Fullscreen Toggle
+        function toggleCustomFullScreen() {
+            const container = document.getElementById('videoSection');
+            if (!document.fullscreenElement) {
+                if (container.requestFullscreen) container.requestFullscreen();
+                else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // Watermark Movement
         const studentName = localStorage.getItem("studentName") || "Student";
         const studentId = localStorage.getItem("studentId") || "ID-Pending";
         const watermarkEl = document.getElementById("watermark");
-        
         watermarkEl.innerText = `${studentName} (${studentId})`;
 
-        // Move Watermark randomly every 4 seconds
         function moveWatermark() {
             const container = document.querySelector('.video-wrapper');
-            const maxX = container.clientWidth - watermarkEl.clientWidth - 20;
-            const maxY = container.clientHeight - watermarkEl.clientHeight - 20;
+            const maxX = container.clientWidth - watermarkEl.clientWidth - 15;
+            const maxY = container.clientHeight - watermarkEl.clientHeight - 15;
 
             const randomX = Math.max(10, Math.floor(Math.random() * maxX));
             const randomY = Math.max(10, Math.floor(Math.random() * maxY));
@@ -147,21 +358,20 @@
             watermarkEl.style.left = `${randomX}px`;
             watermarkEl.style.top = `${randomY}px`;
         }
-        
         setInterval(moveWatermark, 4000);
         moveWatermark();
 
-        // 3. Prevent DevTools & Inspecting
+        // Prevent Inspect Element and Copying
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.keyCode === 123 || 
                 (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
-                (e.ctrlKey && e.keyCode === 85) || 
-                (e.ctrlKey && e.keyCode === 83)) { 
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) { 
                 e.preventDefault();
                 return false;
             }
         });
+        document.addEventListener('copy', e => e.preventDefault());
     </script>
 </body>
 </html>
