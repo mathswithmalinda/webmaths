@@ -3,31 +3,46 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="description" content="ආදරණීය ගණිතය පන්තිය - WebMaths LMS" />
+        <meta name="author" content="K. Malinda Sri Athugalpura" />
         <title>ආද❤️ණීය ගණිතය පන්තිය</title>
-        <!-- Favicon-->
+        
+        <!-- Standard Favicon -->
         <link rel="icon" type="image/x-icon" href="pic2.jpg" />
-        <!-- Custom Google font-->
+        <link rel="shortcut icon" href="pic2.jpg" type="image/jpeg" />
+        
+        <!-- Apple iOS (Safari PWA & Web Support) -->
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="WebMaths" />
+        <link rel="apple-touch-icon" href="pic2.jpg" />
+
+        <!-- Microsoft Windows / Edge Support -->
+        <meta name="msapplication-TileImage" content="pic2.jpg" />
+        <meta name="msapplication-TileColor" content="#0d1b2a" />
+
+        <!-- Custom Google font -->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
-        <!-- Bootstrap icons-->
+        
+        <!-- Bootstrap icons -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
+        
+        <!-- Core theme CSS -->
         <link href="styles.css" rel="stylesheet" />
         
         <!-- PWA Configuration -->
-        <link rel="manifest" href="manifest.json">
-        <meta name="theme-color" content="#007bff">
+        <link rel="manifest" href="manifest.json" />
+        <meta name="theme-color" content="#007bff" />
 
         <style>
-            #wp{ margin-top: 10px; height: 100px; }
-            #wp1{ margin-left: 20px; height: 100px; }
-            #wp2{ margin-left: 20px; height:100px; }
-            #wp3{ margin-left: 20px; height: 75px; }
-            #wp4{ margin-left: 20px; margin-top: 10px; height: 75px; }
-            .mb-1{ align-items: center; }
+            #wp { margin-top: 10px; height: 100px; }
+            #wp1 { margin-left: 20px; height: 100px; }
+            #wp2 { margin-left: 20px; height: 100px; }
+            #wp3 { margin-left: 20px; height: 75px; }
+            #wp4 { margin-left: 20px; margin-top: 10px; height: 75px; }
+            .mb-1 { align-items: center; }
 
             /* Intro Loader */
             #intro-loader {
@@ -100,6 +115,19 @@
             #intro-loader.fade-out {
                 opacity: 0;
                 visibility: hidden;
+            }
+
+            /* Video Responsive Fix */
+            .video-container {
+                width: 100%;
+                max-width: 560px;
+                aspect-ratio: 16 / 9;
+                margin-bottom: 20px;
+            }
+            .video-container iframe {
+                width: 100%;
+                height: 100%;
+                border-radius: 12px;
             }
         </style>
     </head>
@@ -290,10 +318,16 @@
                             <div class="text-center my-5">
                                 <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Videos</span></h2>
                                 <p class="lead fw-light mb-4">You can get more thing from this</p>
-                                <div class="d-flex justify-content-center fs-2 gap-4 flex-column align-items-center">
-                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/d7wWL38jP4g" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                <div class="d-flex justify-content-center align-items-center flex-column">
+                                    <div class="video-container">
+                                        <iframe src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="video-container">
+                                        <iframe src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                    <div class="video-container">
+                                        <iframe src="https://www.youtube.com/embed/d7wWL38jP4g" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -318,7 +352,7 @@
                 </div>
             </section>
 
-            <!-- ALWAYS VISIBLE BOTTOM INSTALL CARD -->
+            <!-- BOTTOM INSTALL CARD -->
             <section class="bg-primary text-white py-5 mt-auto shadow-lg" style="border-top: 4px solid #00d4ff;">
                 <div class="container px-5 text-center">
                     <div class="row justify-content-center">
@@ -423,10 +457,12 @@
                 clearInterval(progressInterval);
             }, totalDuration);
 
-            // Robust PWA & Modal Logic
+            // Cross-Platform PWA & iOS Safari Modal Logic
             let deferredPrompt;
             const pwaModalElement = document.getElementById('pwaModal');
             const pwaModal = new bootstrap.Modal(pwaModalElement);
+
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
             window.addEventListener('beforeinstallprompt', (e) => {
                 e.preventDefault();
@@ -447,8 +483,10 @@
                     const { outcome } = await deferredPrompt.userChoice;
                     console.log(`User response: ${outcome}`);
                     deferredPrompt = null;
+                } else if (isIOS) {
+                    alert("iPhone / iPad සදහා: Safari Browser එකේ Share Button (↑) එක මත Click කර 'Add to Home Screen' තෝරන්න.");
                 } else {
-                    alert("App එක Install කිරීම සඳහා Chrome Browser හි Menu (⋮) මත Click කර 'Add to Home screen' හෝ 'Install app' තෝරන්න.");
+                    alert("App එක Install කිරීම සඳහා Browser Menu (⋮) එකෙන් 'Add to Home screen' හෝ 'Install app' තෝරන්න.");
                 }
             });
 
@@ -457,7 +495,7 @@
                 console.log('PWA installed successfully!');
             });
 
-            // Service Worker Registration (Fixed Path)
+            // Service Worker Registration
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('./service-worker.js')
