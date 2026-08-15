@@ -1,10 +1,14 @@
 const CACHE_NAME = 'webmaths-v1';
 const urlsToCache = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/scripts.js',
-  '/pic2.jpg'
+  './',
+  './index.html',
+  './about.html',
+  './service.html',
+  './contact.html',
+  './thinetha.html',
+  './styles.css',
+  './scripts.js',
+  './pic2.jpg'
 ];
 
 self.addEventListener('install', (event) => {
