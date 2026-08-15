@@ -2,7 +2,7 @@
   "name": "ආදරණීය ගණිතය පන්තිය - WebMaths LMS",
   "short_name": "WebMaths",
   "description": "K. Malinda Sri Athugalpura - LMS & Video Learning Platform",
-  "start_url": "/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0d1b2a",
   "theme_color": "#007bff",
