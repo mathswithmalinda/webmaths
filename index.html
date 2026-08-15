@@ -16,10 +16,11 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="styles.css" rel="stylesheet" />
-        <!--js-->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.min.js" integrity="sha384-VQqxDN0EQCkWoxt/0vsQvZswzTHUVOImccYmSyhJTp7kGtPed0Qcx8rK9h9YEgx+" crossorigin="anonymous"></script>
         
+        <!-- PWA Configuration -->
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#007bff">
+
         <style>
             #wp{ margin-top: 10px; height: 100px; }
             #wp1{ margin-left: 20px; height: 100px; }
@@ -28,7 +29,7 @@
             #wp4{ margin-left: 20px; margin-top: 10px; height: 75px; }
             .mb-1{ align-items: center; }
 
-            /* Modern Video Intro Style Loading Screen */
+            /* Intro Loader */
             #intro-loader {
                 position: fixed;
                 top: 0;
@@ -104,16 +105,13 @@
     </head>
     <body class="d-flex flex-column h-100">
 
-        <!-- Modern Video-Style Intro Loader -->
+        <!-- Intro Loader -->
         <div id="intro-loader">
-            <!-- Step 1: Welcome -->
             <div class="intro-step active" id="step1">
                 <i class="bi bi-mortarboard-fill feature-icon-box"></i>
                 <h2 class="fw-bold fs-3 text-gradient">Welcome to K Malinda Sri Athugalpura LMS</h2>
                 <p class="text-white-50">ආදරණීය ගණිතය පන්තිය</p>
             </div>
-
-            <!-- Step 2: Features Showcase -->
             <div class="intro-step" id="step2">
                 <h4 class="fw-bold mb-4">අපගේ සේවාවන්</h4>
                 <div class="row g-3 justify-content-center">
@@ -135,8 +133,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Step 3: Contact & Social Info -->
             <div class="intro-step" id="step3">
                 <h4 class="fw-bold mb-3">අප හා සම්බන්ධ වන්න</h4>
                 <div class="d-flex flex-wrap justify-content-center">
@@ -146,7 +142,6 @@
                     <div class="social-badge"><i class="bi bi-facebook text-primary"></i> K Malinda Sri Athugalpura</div>
                 </div>
             </div>
-
             <div class="progress-bar-container">
                 <div class="progress-bar-fill" id="progressFill"></div>
             </div>
@@ -159,23 +154,28 @@
                     <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">ආද❤️ණීය ගණිතය පන්තිය</span></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder align-items-lg-center gap-2">
                             <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
                             <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
                             <li class="nav-item"><a class="nav-link" href="service.html">Service</a></li>
                             <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-                            <button type="button" class="btn btn-outline-primary" id="courseBtn">Courses</button>&nbsp;
+                            <button type="button" class="btn btn-outline-primary" id="courseBtn">Courses</button>
                             <button type="button" class="btn btn-outline-primary" id="rec">Recordings</button>
+
+                            <!-- Navbar Install Button -->
+                            <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 ms-lg-2" id="navInstallBtn">
+                                <i class="bi bi-download me-1"></i> Install App
+                            </button>
                         </ul>
                     </div>
                 </div>
             </nav>
+
             <!-- Header-->
             <header class="py-5">
                 <div class="container px-5 pb-5">
                     <div class="row gx-5 align-items-center">
                         <div class="col-xxl-5">
-                            <!-- Header text content-->
                             <div class="text-center text-xxl-start">
                                 <div class="badge bg-gradient-primary-to-secondary text-white mb-4"><div class="text-uppercase">ආද❤️ණීය &middot; ගණිතය &middot; පන්තිය</div></div>
                                 <div class="fs-3 fw-light text-muted">ප්‍රථිඵල මතම හැඩවෙන</div>
@@ -253,74 +253,92 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Portfolio Section -->
+            <section class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-xxl-8">
+                            <div class="text-center my-5">
+                                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Portfolio</span></h2>
+                                <p class="lead fw-light mb-4">I AM NOT DESIGNED TO COME 2nd OR 3rd <strong>I AM DESIGNED TO WIN</strong></p>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+                                        <img src="gallery1.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 1" />
+                                        <img src="gallery2.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 2" />
+                                    </div>
+                                    <div class="col-lg-4 mb-4 mb-lg-0">
+                                        <img src="aboutpropic.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="About Pic" />
+                                        <img src="gallery4.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 4" />
+                                    </div>
+                                    <div class="col-lg-4 mb-4 mb-lg-0">
+                                        <img src="gallery3 (1).png" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 3" />
+                                        <img src="gallery5 .jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 5" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Videos Section-->
+            <section class="bg-light py-5">
+                <div class="container px-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-xxl-8">
+                            <div class="text-center my-5">
+                                <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Videos</span></h2>
+                                <p class="lead fw-light mb-4">You can get more thing from this</p>
+                                <div class="d-flex justify-content-center fs-2 gap-4 flex-column align-items-center">
+                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                    <iframe width="320" height="240" src="https://www.youtube.com/embed/d7wWL38jP4g" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Institutes -->
+            <section class="bg-white py-5">
+                <div class="container px-5">
+                    <div class="row gx-5 justify-content-center">
+                        <div class="col-xxl-8 text-center my-5">
+                            <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Institutes</span></h2>
+                            <p class="text-muted">Welcome to one of the leading Mathematics tuition institutes, where excellence meets experience.</p>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <a href="#"><img src="in1.jpg" alt="icon" id="wp" /></a>
+                                <a href="#"><img src="in2.jpg" alt="facebook" id="wp1" /></a>
+                                <a href="#"><img src="in4.jpg" alt="instagram" id="wp2" /></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ALWAYS VISIBLE BOTTOM INSTALL CARD -->
+            <section class="bg-primary text-white py-5 mt-auto shadow-lg" style="border-top: 4px solid #00d4ff;">
+                <div class="container px-5 text-center">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8">
+                            <i class="bi bi-phone-vibrate display-4 mb-3 d-inline-block"></i>
+                            <h3 class="fw-bold mb-2">WebMaths LMS App එක Phone එකට ලබාගන්න</h3>
+                            <p class="lead text-white-50 fs-6 mb-4">
+                                Browser එකෙන් පන්ති වලට යනවා වෙනුවට direct Mobile App එකක් ලෙස භාවිත කර පහසුවෙන්ම Live Classes සහ Recordings ලබාගන්න.
+                            </p>
+                            <button class="btn btn-light btn-lg rounded-pill fw-bold text-primary px-5 shadow-sm" id="bottomInstallBtn">
+                                <i class="bi bi-download me-2"></i>Install App Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
 
-        <!-- Portfolio -->
-        <section class="navbar navbar-expand-lg navbar-light bg-white py-3">
-            <div class="container px-5">
-                <div class="row gx-5 justify-content-center">
-                    <div class="col-xxl-8">
-                        <div class="text-center my-5">
-                            <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Portfolio</span></h2>
-                            <p class="lead fw-light mb-4">I AM NOT DESIGNED TO COME 2nd OR 3rd <strong>I AM DESIGNED TO WIN</strong></p>
-                            <div class="row">
-                                <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
-                                    <img src="gallery1.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 1" />
-                                    <img src="gallery2.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 2" />
-                                </div>
-                                <div class="col-lg-4 mb-4 mb-lg-0">
-                                    <img src="aboutpropic.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="About Pic" />
-                                    <img src="gallery4.jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 4" />
-                                </div>
-                                <div class="col-lg-4 mb-4 mb-lg-0">
-                                    <img src="gallery3 (1).png" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 3" />
-                                    <img src="gallery5 .jpg" class="w-100 shadow-1-strong rounded mb-4" alt="Gallery 5" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Videos Section-->
-        <section class="bg-light py-5">
-            <div class="container px-5">
-                <div class="row gx-5 justify-content-center">
-                    <div class="col-xxl-8">
-                        <div class="text-center my-5">
-                            <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Videos</span></h2>
-                            <p class="lead fw-light mb-4">You can get more thing from this</p>
-                            <div class="d-flex justify-content-center fs-2 gap-4 flex-column align-items-center">
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/cusD1hJqK-o?si=4LCDk9WA0HlxdkW4" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/YkqibyIWfis?si=dHJQtQZfEaz9D9ky" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                                <iframe width="320" height="240" src="https://www.youtube.com/embed/d7wWL38jP4g" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Institutes -->
-        <section class="bg-white py-5">
-            <div class="container px-5">
-                <div class="row gx-5 justify-content-center">
-                    <div class="col-xxl-8 text-center my-5">
-                        <h2 class="display-5 fw-bolder"><span class="text-gradient d-inline">Institutes</span></h2>
-                        <p class="text-muted">Welcome to one of the leading Mathematics tuition institutes, where excellence meets experience.</p>
-                        <div class="d-flex justify-content-center gap-3 flex-wrap">
-                            <a href="#"><img src="in1.jpg" alt="icon" id="wp" /></a>
-                            <a href="#"><img src="in2.jpg" alt="facebook" id="wp1" /></a>
-                            <a href="#"><img src="in4.jpg" alt="instagram" id="wp2" /></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Footer-->
-        <footer class="bg-white py-4 mt-auto border-top">
+        <footer class="bg-white py-4 border-top">
             <div class="container px-5">
                 <div class="row align-items-center justify-content-between flex-column flex-sm-row">
                     <div class="col-auto"><div class="small m-0">&copy; ආද❤️ණීය ගණිතය පන්තිය 2026</div></div>
@@ -334,44 +352,113 @@
             </div>
         </footer>
 
+        <!-- Custom Bootstrap PWA Popup Modal -->
+        <div class="modal fade" id="pwaModal" tabindex="-1" aria-labelledby="pwaModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow-lg">
+                    <div class="modal-header border-0 bg-primary text-white rounded-top-4">
+                        <h5 class="modal-title fw-bold" id="pwaModalLabel"><i class="bi bi-download me-2"></i>App එක Install කරගන්න</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center py-4">
+                        <img src="pic2.jpg" alt="App Icon" class="rounded-circle mb-3 shadow-sm" width="80" height="80">
+                        <h4 class="fw-bold mb-1">WebMaths LMS</h4>
+                        <p class="text-muted small mb-3">ආදරණීය ගණිතය පන්තිය - K Malinda Sri Athugalpura</p>
+                        <div class="alert alert-info border-0 small text-start my-3">
+                            <div class="mb-1"><i class="bi bi-check-circle-fill me-2 text-primary"></i> Fast loading & smooth experience</div>
+                            <div><i class="bi bi-check-circle-fill me-2 text-primary"></i> Phone එකේ Home Screen එකෙන් සෘජුවම පන්ති වලට පිවිසිය හැක</div>
+                        </div>
+                        <button id="modalConfirmInstallBtn" class="btn btn-primary rounded-pill px-4 py-2 w-100 fw-bold shadow">
+                            Install App Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Scripts -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script src="scripts.js"></script>
         <script>
-            document.getElementById('rec').addEventListener('click', function() {
-                window.location.href = 'record.html';
-            });
+            // Recordings Navigation
+            const recBtn = document.getElementById('rec');
+            if (recBtn) {
+                recBtn.addEventListener('click', function() {
+                    window.location.href = 'record.html';
+                });
+            }
 
-            // Intro Loader Video Animation Controller
-            const totalDuration = 4500; // 4.5 seconds total intro
+            // Intro Loader Controller
+            const totalDuration = 4500;
             const fillElement = document.getElementById("progressFill");
             let progress = 0;
 
             const progressInterval = setInterval(() => {
                 progress += 2;
-                if (progress <= 100) {
+                if (progress <= 100 && fillElement) {
                     fillElement.style.width = progress + "%";
                 }
             }, totalDuration / 50);
 
-            // Step 1 -> Step 2
             setTimeout(() => {
-                document.getElementById("step1").classList.remove("active");
-                document.getElementById("step2").classList.add("active");
+                document.getElementById("step1")?.classList.remove("active");
+                document.getElementById("step2")?.classList.add("active");
             }, 1500);
 
-            // Step 2 -> Step 3
             setTimeout(() => {
-                document.getElementById("step2").classList.remove("active");
-                document.getElementById("step3").classList.add("active");
+                document.getElementById("step2")?.classList.remove("active");
+                document.getElementById("step3")?.classList.add("active");
             }, 3000);
 
-            // Hide Loader
             setTimeout(() => {
                 const loader = document.getElementById("intro-loader");
-                loader.classList.add("fade-out");
+                if (loader) loader.classList.add("fade-out");
                 clearInterval(progressInterval);
             }, totalDuration);
+
+            // Robust PWA & Modal Logic
+            let deferredPrompt;
+            const pwaModalElement = document.getElementById('pwaModal');
+            const pwaModal = new bootstrap.Modal(pwaModalElement);
+
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+            });
+
+            function handleInstallClick() {
+                // Open Bootstrap Modal in all cases
+                pwaModal.show();
+            }
+
+            document.getElementById('navInstallBtn').addEventListener('click', handleInstallClick);
+            document.getElementById('bottomInstallBtn').addEventListener('click', handleInstallClick);
+
+            document.getElementById('modalConfirmInstallBtn').addEventListener('click', async () => {
+                pwaModal.hide();
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    deferredPrompt = null;
+                } else {
+                    alert("App එක Install කිරීම සඳහා Chrome Browser හි Menu (⋮) මත Click කර 'Add to Home screen' හෝ 'Install app' තෝරන්න.");
+                }
+            });
+
+            window.addEventListener('appinstalled', () => {
+                deferredPrompt = null;
+                console.log('PWA was installed successfully!');
+            });
+
+            // Service Worker Registration
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('service-worker.js')
+                        .then(reg => console.log('Service Worker Registered Successfully! Scope:', reg.scope))
+                        .catch(err => console.log('Service Worker Registration Failed:', err));
+                });
+            }
         </script>
     </body>
 </html>
