@@ -2,8 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Video Player - ආදරණීය ගණිතය පන්තිය</title>
+    
+    <!-- iOS / Safari & PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="icon" type="image/x-icon" href="pic2.jpg" />
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -60,22 +66,24 @@
 
         .video-wrapper {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
             height: 0;
             overflow: hidden;
+            background: #000;
         }
 
-        .video-wrapper iframe {
+        .video-wrapper iframe, 
+        .video-wrapper div#ytPlayer {
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100% !important;
+            height: 100% !important;
             border: 0;
             pointer-events: none; /* Disables all clicks on YouTube native elements */
         }
 
-        /* 100% Full Click Shield to prevent YT interactions */
+        /* Full Click Shield to prevent YT interactions */
         .full-shield {
             position: absolute;
             top: 0;
@@ -96,8 +104,8 @@
             background: rgba(13, 17, 23, 0.95);
             display: flex;
             align-items: center;
-            padding: 0 12px;
-            gap: 10px;
+            padding: 0 10px;
+            gap: 6px;
             z-index: 20;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -106,15 +114,18 @@
             background: none;
             border: none;
             color: #fff;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
-            padding: 4px 8px;
+            padding: 4px 6px;
             display: flex;
             align-items: center;
+            justify-content: center;
+            border-radius: 4px;
         }
 
         .control-btn:hover {
             color: #0dcaf0;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .seek-bar {
@@ -130,11 +141,32 @@
             white-space: nowrap;
         }
 
+        .speed-select {
+            background: #161b22;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 11px;
+            border-radius: 4px;
+            padding: 2px 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .quality-badge {
+            font-size: 10px;
+            color: #0dcaf0;
+            background: rgba(13, 202, 240, 0.1);
+            border: 1px solid rgba(13, 202, 240, 0.3);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
         /* Watermark */
         #watermark {
             position: absolute;
             z-index: 15;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 11px;
             font-weight: 600;
             font-family: sans-serif;
@@ -147,16 +179,19 @@
             white-space: nowrap;
         }
 
-        /* Fullscreen styles */
-        .player-container:fullscreen {
-            width: 100vw;
-            height: 100vh;
-            border-radius: 0;
+        /* Native Cross-Browser Fullscreen CSS Fixes */
+        :fullscreen .player-container,
+        :-webkit-full-screen .player-container {
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0 !important;
+            background: #000;
         }
 
-        .player-container:fullscreen .video-wrapper {
-            height: calc(100vh - 48px);
-            padding-bottom: 0;
+        :fullscreen .video-wrapper,
+        :-webkit-full-screen .video-wrapper {
+            height: calc(100vh - 48px) !important;
+            padding-bottom: 0 !important;
         }
 
         /* Zoom Box */
@@ -186,7 +221,7 @@
 
         <!-- Video Player Section -->
         <div id="videoSection" class="player-container">
-            <div class="video-wrapper">
+            <div class="video-wrapper" id="videoWrapper">
                 <!-- Watermark -->
                 <div id="watermark">Loading User...</div>
 
@@ -199,12 +234,29 @@
 
             <!-- Custom Safe Controls -->
             <div class="custom-controls">
-                <button class="control-btn" onclick="togglePlay()"><i id="playIcon" class="bi bi-play-fill"></i></button>
+                <button class="control-btn" title="Play/Pause" onclick="togglePlay()"><i id="playIcon" class="bi bi-play-fill"></i></button>
+                <button class="control-btn" title="Rewind 10s" onclick="skipSeconds(-10)"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button class="control-btn" title="Forward 10s" onclick="skipSeconds(10)"><i class="bi bi-arrow-clockwise"></i></button>
+                
                 <span id="currentTime" class="time-display">0:00</span>
                 <input type="range" id="seekBar" class="seek-bar" value="0" max="100" oninput="seekVideo(this.value)">
                 <span id="durationTime" class="time-display">0:00</span>
-                <button class="control-btn" onclick="toggleMute()"><i id="muteIcon" class="bi bi-volume-up-fill"></i></button>
-                <button class="control-btn" onclick="toggleCustomFullScreen()"><i class="bi bi-fullscreen"></i></button>
+
+                <!-- Playback Speed Option -->
+                <select id="speedSelect" class="speed-select" onchange="changeSpeed(this.value)" title="Playback Speed">
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option value="1" selected>1.0x</option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2.0x</option>
+                </select>
+
+                <!-- Quality Status Indicator -->
+                <span id="qualityLabel" class="quality-badge" title="Current Quality">Auto</span>
+
+                <button class="control-btn" title="Mute/Unmute" onclick="toggleMute()"><i id="muteIcon" class="bi bi-volume-up-fill"></i></button>
+                <button class="control-btn" title="Full Screen" onclick="toggleCustomFullScreen()"><i class="bi bi-fullscreen"></i></button>
             </div>
         </div>
 
@@ -243,40 +295,42 @@
                 videoId: videoId,
                 playerVars: {
                     'controls': 0,        // Hide ALL YouTube Native Controls
-                    'cc_load_policy': 0, // Disable Closed Captions / Subtitles by default
+                    'cc_load_policy': 0, // Disable Subtitles by default
                     'cc_lang_pref': 'none',
                     'modestbranding': 1, // Remove YT Branding
                     'rel': 0,            // Hide related videos
                     'showinfo': 0,       // Hide video title
                     'fs': 0,             // Hide native fullscreen button
                     'iv_load_policy': 3, // Hide annotations
-                    'disablekb': 1       // Disable keyboard shortcuts
+                    'disablekb': 1,      // Disable keyboard shortcuts
+                    'playsinline': 1     // Keep playback inline on iOS
                 },
                 events: {
                     'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+                    'onStateChange': onPlayerStateChange,
+                    'onPlaybackQualityChange': onQualityChange
                 }
             });
         }
 
         function onPlayerReady(event) {
-            // Forcefully unload caption modules if present
             if (player.unloadModule) {
                 player.unloadModule('captions');
                 player.unloadModule('cc');
             }
             updateTimer();
             setInterval(updateTimer, 500);
+            updateQualityLabel();
         }
 
         function onPlayerStateChange(event) {
             const playIcon = document.getElementById('playIcon');
             if (event.data === YT.PlayerState.PLAYING) {
                 playIcon.className = 'bi bi-pause-fill';
-                // Double check to turn off captions on play
                 if (player.unloadModule) {
                     player.unloadModule('captions');
                 }
+                updateQualityLabel();
             } else {
                 playIcon.className = 'bi bi-play-fill';
             }
@@ -288,6 +342,44 @@
                 player.pauseVideo();
             } else {
                 player.playVideo();
+            }
+        }
+
+        /* 10 Seconds Forward / Rewind Functionality */
+        function skipSeconds(seconds) {
+            if (!player || !player.getCurrentTime) return;
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            let newTime = currentTime + seconds;
+            
+            if (newTime < 0) newTime = 0;
+            if (newTime > duration) newTime = duration;
+
+            player.seekTo(newTime, true);
+        }
+
+        /* Playback Speed Controller */
+        function changeSpeed(speed) {
+            if (!player || !player.setPlaybackRate) return;
+            player.setPlaybackRate(parseFloat(speed));
+        }
+
+        /* Video Quality Status Handler */
+        function onQualityChange(event) {
+            updateQualityLabel();
+        }
+
+        function updateQualityLabel() {
+            if (!player || !player.getPlaybackQuality) return;
+            const quality = player.getPlaybackQuality();
+            const labelEl = document.getElementById('qualityLabel');
+            
+            if (quality) {
+                let cleanQuality = quality.replace('hd', '').replace('small', '240p').replace('medium', '360p').replace('large', '480p');
+                if (cleanQuality === '720' || cleanQuality === '1080') cleanQuality += 'p HD';
+                labelEl.innerText = cleanQuality.toUpperCase();
+            } else {
+                labelEl.innerText = 'AUTO';
             }
         }
 
@@ -330,14 +422,22 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Fullscreen Toggle
+        // Fullscreen Toggle Supporting Mobile (Safari / Chrome)
         function toggleCustomFullScreen() {
             const container = document.getElementById('videoSection');
-            if (!document.fullscreenElement) {
-                if (container.requestFullscreen) container.requestFullscreen();
-                else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (container.requestFullscreen) {
+                    container.requestFullscreen();
+                } else if (container.webkitRequestFullscreen) { /* iOS / Safari */
+                    container.webkitRequestFullscreen();
+                }
             } else {
-                if (document.exitFullscreen) document.exitFullscreen();
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
             }
         }
 
@@ -348,7 +448,8 @@
         watermarkEl.innerText = `${studentName} (${studentId})`;
 
         function moveWatermark() {
-            const container = document.querySelector('.video-wrapper');
+            const container = document.getElementById('videoWrapper');
+            if(!container) return;
             const maxX = container.clientWidth - watermarkEl.clientWidth - 15;
             const maxY = container.clientHeight - watermarkEl.clientHeight - 15;
 
@@ -361,7 +462,7 @@
         setInterval(moveWatermark, 4000);
         moveWatermark();
 
-        // Prevent Inspect Element and Copying
+        // Prevent Context Menu & Shortcuts
         document.addEventListener('contextmenu', e => e.preventDefault());
         document.addEventListener('keydown', e => {
             if (e.keyCode === 123 || 
