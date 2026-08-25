@@ -3,57 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - User Tracking</title>
+    <title>Live User Tracking - Admin</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+        .custom-scroll::-webkit-scrollbar-thumb:hover { background: #06b6d4; }
     </style>
 </head>
-<body class="bg-gray-50 p-6">
+<body class="bg-slate-900 text-slate-100 font-sans min-h-screen p-4 sm:p-6 pb-20">
 
-    <div class="max-w-6xl mx-auto">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Live User Tracking Dashboard</h1>
-            <span id="userCount" class="bg-blue-600 text-white px-4 py-1 rounded-full text-sm">Loading...</span>
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header Section -->
+        <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-users-viewfinder text-3xl text-cyan-400"></i>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Live User Tracking Dashboard</h1>
+                    <p class="text-slate-400 text-xs sm:text-sm">Real-time active users and account statuses</p>
+                </div>
+            </div>
+            <span id="userCount" class="bg-cyan-950 text-cyan-400 border border-cyan-800 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold shadow-md">
+                <i class="fa-solid fa-spinner animate-spin mr-2"></i>Loading...
+            </span>
         </div>
 
-        <div class="bg-white shadow-xl rounded-2xl overflow-hidden border border-gray-100">
-            <table class="w-full text-left">
-                <thead class="bg-gray-800 text-white">
+        <!-- Search Bar Section -->
+        <div class="bg-slate-800 p-4 rounded-2xl border border-slate-700 shadow-xl">
+            <div class="relative w-full">
+                <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400"></i>
+                <input 
+                    type="text" 
+                    id="idSearchInput" 
+                    oninput="filterTrackingData()" 
+                    placeholder="Search by Student ID or Name..." 
+                    class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-11 pr-4 py-2.5 text-slate-200 focus:outline-none focus:border-cyan-500 text-sm"
+                >
+            </div>
+        </div>
+
+        <!-- Desktop View Table -->
+        <div class="hidden md:block bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
+            <table class="w-full text-left text-sm text-slate-300">
+                <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs border-b border-slate-700">
                     <tr>
-                        <th class="px-6 py-4">Student ID</th>
-                        <th class="px-6 py-4">Name</th>
-                        <th class="px-6 py-4">Current Page</th>
-                        <th class="px-6 py-4">Status</th>
-                        <th class="px-6 py-4">Last Active</th>
+                        <th class="p-4">Student ID</th>
+                        <th class="p-4">Name</th>
+                        <th class="p-4">Current Page</th>
+                        <th class="p-4">Live State</th>
+                        <th class="p-4">Account Status</th>
+                        <th class="p-4 text-right">Last Active</th>
                     </tr>
                 </thead>
-                <tbody id="trackingTableBody" class="divide-y divide-gray-200">
+                <tbody id="trackingTableBody" class="divide-y divide-slate-700/50">
                 </tbody>
             </table>
         </div>
+
+        <!-- Mobile Responsive View Cards -->
+        <div id="trackingMobileCards" class="grid grid-cols-1 gap-4 md:hidden"></div>
+
     </div>
 
-    <!-- Firebase Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
-
     <script>
-        // --- ADMIN LOGIN SECURITY ---
-      //  const adminUser = "admin";       // Set your admin username
-     //   const adminPass = "malinda123";  // Set your admin password
-
-    //    const enteredUser = prompt("Admin Username එක ඇතුළත් කරන්න:");
-    //    const enteredPass = prompt("Admin Password එක ඇතුළත් කරන්න:");
-
-    //    if (enteredUser !== adminUser || enteredPass !== adminPass) {
-    //        alert("වැරදි දත්ත! ඔබට මෙම පිටුව බැලීමට අවසර නැත.");
-    //        window.location.href = "index.html"; // Redirect to login if wrong
-   //     }
-        // ----------------------------
-
-        // Firebase configuration
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
             authDomain: "mathswithmalindasirweb.firebaseapp.com",
@@ -61,55 +80,131 @@
             projectId: "mathswithmalindasirweb",
             storageBucket: "mathswithmalindasirweb.firebasestorage.app",
             messagingSenderId: "806771086827",
-            appId: "1:806771086827:web:55978c72cac010a3d935ae",
-            measurementId: "G-HDNBFV1V96"
+            appId: "1:806771086827:web:55978c72cac010a3d935ae"
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
-
-        // Reference to users node
         const usersRef = db.ref("users");
 
-        // Real-time data listener
-        usersRef.on("value", (snapshot) => {
-            const tableBody = document.getElementById("trackingTableBody");
-            const userCount = document.getElementById("userCount");
-            tableBody.innerHTML = "";
+        let allActiveUsers = {}; // Firebase එකෙන් එන සියලුම Data තබා ගැනීමට Variable එකක්
 
-            const users = snapshot.val();
-            if (!users) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No users found</td></tr>`;
-                userCount.innerText = "Active Users: 0";
+        // Real-time Data Listener
+        usersRef.on("value", (snapshot) => {
+            allActiveUsers = snapshot.val() || {};
+            filterTrackingData(); // Data ලැබුණු වහාම Table/Cards Render කිරීම
+        });
+
+        // Search Engine Function
+        function filterTrackingData() {
+            const tableBody = document.getElementById("trackingTableBody");
+            const mobileCards = document.getElementById("trackingMobileCards");
+            const userCount = document.getElementById("userCount");
+            const searchValue = document.getElementById("idSearchInput").value.toLowerCase().trim();
+
+            tableBody.innerHTML = "";
+            mobileCards.innerHTML = "";
+
+            if (!allActiveUsers || Object.keys(allActiveUsers).length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">No active users found</td></tr>`;
+                mobileCards.innerHTML = `<div class="p-6 text-center text-slate-500 bg-slate-800 rounded-2xl border border-slate-700">No active users found</div>`;
+                userCount.innerHTML = `<i class="fa-solid fa-user-group mr-2"></i>Active Users: 0`;
                 return;
             }
 
-            userCount.innerText = `Active Users: ${Object.keys(users).length}`;
+            let matchCount = 0;
 
-            for (const id in users) {
-                const user = users[id];
-                const lastActive = user.last_active || "Just now";
-                const row = `
-                    <tr class="hover:bg-blue-50 transition-colors">
-                        <td class="px-6 py-4 font-semibold text-blue-600">${id}</td>
-                        <td class="px-6 py-4 text-gray-700">${user.name || "-"}</td>
-                        <td class="px-6 py-4">
-                            <span class="px-3 py-1 bg-gray-100 rounded-md text-xs font-medium">${user.page || "-"}</span>
-                        </td>
-                        <td class="px-6 py-4">
-                            <span class="flex items-center text-green-500 font-bold">
-                                <span class="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-                                Online
-                            </span>
-                        </td>
-                        <td class="px-6 py-4 text-gray-500 text-sm">${lastActive}</td>
-                    </tr>
-                `;
-                tableBody.innerHTML += row;
+            for (const id in allActiveUsers) {
+                const user = allActiveUsers[id];
+                const userName = (user.name || "").toLowerCase();
+                const studentId = id.toLowerCase();
+
+                // Search query එක ID එකට හෝ Name එකට Match වේදැයි පරීක්ෂා කිරීම
+                if (studentId.includes(searchValue) || userName.includes(searchValue)) {
+                    matchCount++;
+                    const lastActive = user.last_active || "Just now";
+                    const currentPage = user.page || "-";
+                    const isBlocked = user.status === 'blocked';
+
+                    const accStatusHTML = isBlocked
+                        ? `<span class="bg-red-950/80 text-red-400 border border-red-800 px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1"><i class="fa-solid fa-user-lock"></i> Blocked</span>`
+                        : `<span class="bg-emerald-950/80 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded-lg text-xs font-bold inline-flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Active</span>`;
+
+                    // Desktop Table Row
+                    const row = `
+                        <tr class="hover:bg-slate-700/30 transition-colors">
+                            <td class="p-4 font-mono font-bold text-cyan-400">${id}</td>
+                            <td class="p-4 font-medium text-slate-200">${user.name || "-"}</td>
+                            <td class="p-4">
+                                <span class="px-2.5 py-1 bg-slate-900 border border-slate-700 text-cyan-300 rounded-md text-xs font-mono">${currentPage}</span>
+                            </td>
+                            <td class="p-4">
+                                <span class="inline-flex items-center gap-2 text-emerald-400 text-xs font-bold bg-emerald-950/50 border border-emerald-800/60 px-2.5 py-1 rounded-full">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-ping"></span>
+                                    Online
+                                </span>
+                            </td>
+                            <td class="p-4">${accStatusHTML}</td>
+                            <td class="p-4 text-right text-slate-400 text-xs">${lastActive}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+
+                    // Mobile Card View
+                    const card = `
+                        <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-lg flex flex-col gap-3">
+                            <div class="flex justify-between items-start border-b border-slate-700/60 pb-3">
+                                <div>
+                                    <span class="font-mono text-cyan-400 font-bold text-base">${id}</span>
+                                    <h3 class="text-white font-semibold text-sm">${user.name || "-"}</h3>
+                                </div>
+                                <span class="inline-flex items-center gap-1.5 text-emerald-400 text-xs font-bold bg-emerald-950/60 border border-emerald-800 px-2.5 py-1 rounded-full">
+                                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span> Online
+                                </span>
+                            </div>
+                            
+                            <div class="grid grid-cols-2 gap-2 text-xs">
+                                <div>
+                                    <span class="text-slate-400 block mb-1">Current Page</span>
+                                    <span class="px-2 py-1 bg-slate-900 border border-slate-700 text-cyan-300 rounded text-[11px] font-mono inline-block">${currentPage}</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-400 block mb-1">Account Status</span>
+                                    ${accStatusHTML}
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center bg-slate-900/60 px-3 py-2 rounded-xl text-xs text-slate-400 mt-1">
+                                <span><i class="fa-regular fa-clock mr-1"></i>Last Active:</span>
+                                <span class="font-medium text-slate-300">${lastActive}</span>
+                            </div>
+                        </div>
+                    `;
+                    mobileCards.innerHTML += card;
+                }
+            }
+
+            // Search Filter එකට අදාළව Counts යාවත්කාලීන කිරීම
+            userCount.innerHTML = `<i class="fa-solid fa-user-group mr-2"></i>Active Users: ${matchCount}`;
+
+            if (matchCount === 0) {
+                tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-500">Matching Student ID not found</td></tr>`;
+                mobileCards.innerHTML = `<div class="p-6 text-center text-slate-500 bg-slate-800 rounded-2xl border border-slate-700">Matching Student ID not found</div>`;
+            }
+        }
+
+        // Security Controls
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+        document.addEventListener('keydown', (e) => {
+            if (e.keyCode === 123 || 
+                (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+                (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+                e.preventDefault();
+                return false;
             }
         });
     </script>
-
 </body>
 </html>
