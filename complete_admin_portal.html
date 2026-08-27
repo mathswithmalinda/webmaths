@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maths With Malinda LMS - Admin Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' },
+                        indigoAcc: { 500: '#6366f1', 600: '#4f46e5' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <div class="flex flex-col lg:flex-row flex-1 overflow-hidden h-screen">
+        
+        <!-- DESKTOP SIDEBAR -->
+        <aside class="w-64 bg-white border-r border-slate-200 flex-col justify-between hidden lg:flex shrink-0">
+            <div>
+                <div class="h-16 flex items-center px-6 border-b border-slate-100 gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigoAcc-500 flex items-center justify-center text-white shadow-md font-bold">M</div>
+                    <div>
+                        <h1 class="font-bold text-slate-900 text-sm leading-tight">Maths With Malinda</h1>
+                        <span class="text-[11px] font-semibold text-brand-600">LMS Admin Portal</span>
+                    </div>
+                </div>
+
+                <nav class="p-4 space-y-1 text-xs font-semibold">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-brand-50 text-brand-600 transition">
+                        <i class="fa-solid fa-house text-base w-5"></i> Dashboard
+                    </button>
+                    <button onclick="switchTab('students')" id="nav-students" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-user-group text-base w-5"></i> Students
+                    </button>
+                    <button onclick="switchTab('grades')" id="nav-grades" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-graduation-cap text-base w-5"></i> Grades
+                    </button>
+                    <button onclick="switchTab('recordings')" id="nav-recordings" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-video text-base w-5"></i> Recordings & Live
+                    </button>
+                    <button onclick="switchTab('payments')" id="nav-payments" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-credit-card text-base w-5"></i> Payments
+                    </button>
+                    <button onclick="switchTab('analytics')" id="nav-analytics" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-slate-600 hover:bg-slate-50 transition">
+                        <i class="fa-solid fa-chart-line text-base w-5"></i> Analytics
+                    </button>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- MAIN VIEWPORT -->
+        <div class="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scroll">
+            
+            <!-- HEADER BAR -->
+            <header class="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-20 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-brand-600 lg:hidden flex items-center justify-center text-white font-bold text-xs">M</div>
+                    <h2 id="pageTitle" class="text-base sm:text-lg font-bold text-slate-800">Dashboard Overview</h2>
+                </div>
+
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <button onclick="openModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-semibold flex items-center gap-2 shadow-sm transition">
+                        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Add Video Link</span>
+                    </button>
+                    <div class="flex items-center gap-2 border-l border-slate-200 pl-3 sm:pl-4">
+                        <span class="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span>
+                        <span class="text-xs font-semibold text-slate-700 hidden sm:inline">Admin</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- MOBILE SLIDABLE TABS MENU -->
+            <div class="lg:hidden bg-white border-b border-slate-200 px-4 py-2 overflow-x-auto hide-scrollbar flex items-center gap-2 shrink-0">
+                <button onclick="switchTab('dashboard')" id="mob-nav-dashboard" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg bg-brand-50 text-brand-600 font-semibold text-xs border border-brand-100">
+                    <i class="fa-solid fa-house mr-1"></i> Dashboard
+                </button>
+                <button onclick="switchTab('students')" id="mob-nav-students" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs border border-slate-100">
+                    <i class="fa-solid fa-user-group mr-1"></i> Students
+                </button>
+                <button onclick="switchTab('grades')" id="mob-nav-grades" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs border border-slate-100">
+                    <i class="fa-solid fa-graduation-cap mr-1"></i> Grades
+                </button>
+                <button onclick="switchTab('recordings')" id="mob-nav-recordings" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs border border-slate-100">
+                    <i class="fa-solid fa-video mr-1"></i> Recordings
+                </button>
+                <button onclick="switchTab('payments')" id="mob-nav-payments" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs border border-slate-100">
+                    <i class="fa-solid fa-credit-card mr-1"></i> Payments
+                </button>
+                <button onclick="switchTab('analytics')" id="mob-nav-analytics" class="mob-nav-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-slate-600 hover:bg-slate-50 font-semibold text-xs border border-slate-100">
+                    <i class="fa-solid fa-chart-line mr-1"></i> Analytics
+                </button>
+            </div>
+
+            <!-- CONTENT SECTION -->
+            <main class="p-4 sm:p-6 space-y-6 max-w-7xl mx-auto w-full flex-1">
+
+                <!-- DASHBOARD VIEW WITH UP/DOWN TREND INDICATORS -->
+                <div id="view-dashboard" class="tab-content space-y-6">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
+                        
+                        <!-- KPI CARD 1 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Total Students</span>
+                            <h3 id="dashTotalStudents" class="text-xl sm:text-2xl font-bold text-slate-900 my-1">--</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span>+12.5% this month</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI CARD 2 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Active Students</span>
+                            <h3 id="dashActiveStudents" class="text-xl sm:text-2xl font-bold text-slate-900 my-1">--</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span>+8.2% active</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI CARD 3 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Pending Payments</span>
+                            <h3 id="dashPendingPayments" class="text-xl sm:text-2xl font-bold text-amber-600 my-1">--</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-rose-500">
+                                <i class="fa-solid fa-arrow-trend-down"></i>
+                                <span>Needs attention</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI CARD 4 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Paid (Aug 2026)</span>
+                            <h3 id="dashPaidPayments" class="text-xl sm:text-2xl font-bold text-emerald-600 my-1">--</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span>+5.8% collected</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI CARD 5 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Active Live Links</span>
+                            <h3 id="dashActiveLinks" class="text-xl sm:text-2xl font-bold text-brand-600 my-1">--</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-slate-400">
+                                <i class="fa-solid fa-minus"></i>
+                                <span>Stable streams</span>
+                            </div>
+                        </div>
+
+                        <!-- KPI CARD 6 -->
+                        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col justify-between">
+                            <span class="text-[11px] sm:text-xs font-semibold text-slate-500">Collection Rate</span>
+                            <h3 id="dashCollectionRate" class="text-xl sm:text-2xl font-bold text-slate-900 my-1">--%</h3>
+                            <div class="flex items-center gap-1 text-[10px] font-bold text-emerald-600">
+                                <i class="fa-solid fa-arrow-trend-up"></i>
+                                <span>+2.1% growth</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- CHARTS -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4">Grade Wise Distribution</h3>
+                            <div class="h-56 sm:h-64"><canvas id="dashGradeChart"></canvas></div>
+                        </div>
+                        <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                            <h3 class="text-sm font-bold text-slate-800 mb-4">August Payment Breakdown</h3>
+                            <div class="h-56 sm:h-64 flex items-center justify-center"><canvas id="dashPaymentChart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OTHER VIEWS (STUDENTS, GRADES, RECORDINGS, PAYMENTS, ANALYTICS) -->
+                <div id="view-students" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Student Directory</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-400 uppercase font-semibold">
+                                        <th class="pb-3">ID</th>
+                                        <th class="pb-3">Name</th>
+                                        <th class="pb-3">Grade</th>
+                                        <th class="pb-3">Payment</th>
+                                        <th class="pb-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-grades" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Active Grade Links Overview</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="gradesCardsContainer"></div>
+                    </div>
+                </div>
+
+                <div id="view-recordings" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Manage Live / Video Links</h3>
+                        <div id="recordingsListContainer" class="space-y-3"></div>
+                    </div>
+                </div>
+
+                <div id="view-payments" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Monthly Payment Tracker</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead>
+                                    <tr class="border-b border-slate-200 text-slate-400 uppercase font-semibold">
+                                        <th class="pb-3">ID</th>
+                                        <th class="pb-3">Name</th>
+                                        <th class="pb-3">Paid Date</th>
+                                        <th class="pb-3">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentsTableBody" class="divide-y divide-slate-100 font-medium text-slate-700"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-analytics" class="tab-content hidden space-y-6">
+                    <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="text-base font-bold text-slate-800 mb-4">Institute Analytics</h3>
+                        <div class="h-64"><canvas id="instituteChart"></canvas></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="uploadModal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 p-6 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i class="fa-solid fa-video text-brand-600"></i> Add Video Link
+                </h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="linkForm" class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Select Grade</label>
+                    <select id="linkGrade" class="w-full border border-slate-200 rounded-xl px-3 py-2 font-medium" required>
+                        <option value="grade6">Grade 06</option>
+                        <option value="grade7">Grade 07</option>
+                        <option value="grade8">Grade 08</option>
+                        <option value="grade9">Grade 09</option>
+                        <option value="grade10">Grade 10</option>
+                        <option value="grade11">Grade 11</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">Title</label>
+                    <input type="text" id="linkTitle" placeholder="Lesson Name" class="w-full border border-slate-200 rounded-xl px-3 py-2" required>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">URL</label>
+                    <input type="url" id="linkUrl" placeholder="https://youtube.com/..." class="w-full border border-slate-200 rounded-xl px-3 py-2" required>
+                </div>
+                <div class="flex justify-end gap-2 pt-3">
+                    <button type="button" onclick="closeModal()" class="px-4 py-2 bg-slate-100 text-slate-600 font-semibold rounded-xl">Cancel</button>
+                    <button type="submit" id="submitBtn" class="px-4 py-2 bg-brand-600 text-white font-semibold rounded-xl">Publish</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
+            authDomain: "mathswithmalindasirweb.firebaseapp.com",
+            databaseURL: "https://mathswithmalindasirweb-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "mathswithmalindasirweb",
+            storageBucket: "mathswithmalindasirweb.firebasestorage.app",
+            messagingSenderId: "806771086827",
+            appId: "1:806771086827:web:55978c72cac010a3d935ae"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let dbUsers = {};
+        let dbGrades = {};
+        let chartInstances = {};
+
+        window.openModal = () => document.getElementById("uploadModal").classList.remove("hidden");
+        window.closeModal = () => {
+            document.getElementById("uploadModal").classList.add("hidden");
+            document.getElementById("linkForm").reset();
+        };
+
+        document.getElementById("linkForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const grade = document.getElementById("linkGrade").value;
+            const title = document.getElementById("linkTitle").value;
+            const url = document.getElementById("linkUrl").value;
+            try {
+                await set(push(ref(db, `grades/${grade}`)), { title, url, active: true, createdAt: new Date().toISOString() });
+                closeModal();
+            } catch(err) { alert(err.message); }
+        });
+
+        window.switchTab = function(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Sync Desktop Nav
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('bg-brand-50', 'text-brand-600'));
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if(activeNav) activeNav.classList.add('bg-brand-50', 'text-brand-600');
+
+            // Sync Mobile Nav Buttons
+            document.querySelectorAll('.mob-nav-btn').forEach(el => {
+                el.classList.remove('bg-brand-50', 'text-brand-600', 'border-brand-100');
+                el.classList.add('text-slate-600', 'border-slate-100');
+            });
+            const activeMobNav = document.getElementById(`mob-nav-${tabId}`);
+            if(activeMobNav) {
+                activeMobNav.classList.add('bg-brand-50', 'text-brand-600', 'border-brand-100');
+                activeMobNav.classList.remove('text-slate-600', 'border-slate-100');
+            }
+
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+        };
+
+        onValue(ref(db, "users"), (snapshot) => { dbUsers = snapshot.val() || {}; renderAllViews(); });
+        onValue(ref(db, "grades"), (snapshot) => { dbGrades = snapshot.val() || {}; renderAllViews(); });
+
+        function renderAllViews() {
+            let totalStudents = 0, activeStudents = 0, paidCount = 0, unpaidCount = 0;
+            const gradeCounts = { "Grade 06": 0, "Grade 07": 0, "Grade 08": 0, "Grade 09": 0, "Grade 10": 0, "Grade 11": 0 };
+            const instCounts = {};
+
+            const studentTable = document.getElementById("studentsTableBody");
+            const payTable = document.getElementById("paymentsTableBody");
+            studentTable.innerHTML = ""; payTable.innerHTML = "";
+
+            Object.keys(dbUsers).forEach(id => {
+                const u = dbUsers[id];
+                totalStudents++;
+                if (u.status === "active") activeStudents++;
+                const gKey = typeof u.grade === 'number' ? `Grade 0${u.grade}` : (u.grade || "Grade 06");
+                if(gradeCounts[gKey] !== undefined) gradeCounts[gKey]++;
+
+                const inst = u.institute || "Other";
+                instCounts[inst] = (instCounts[inst] || 0) + 1;
+
+                const pStatus = u.payments && u.payments["2026-08"] ? u.payments["2026-08"].status : "unpaid";
+                if (pStatus === "paid") paidCount++; else unpaidCount++;
+
+                studentTable.innerHTML += `<tr><td class="py-2 font-mono font-bold">${u.classId||id}</td><td class="py-2">${u.name||"-"}</td><td class="py-2">${u.grade}</td><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${pStatus === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${pStatus}</span></td><td class="py-2"><span class="w-2 h-2 inline-block rounded-full ${u.status === 'active' ? 'bg-emerald-500' : 'bg-red-500'}"></span></td></tr>`;
+                payTable.innerHTML += `<tr><td class="py-2 font-mono font-bold">${u.classId||id}</td><td class="py-2">${u.name||"-"}</td><td class="py-2">${u.payments?.["2026-08"]?.paidAt||"-"}</td><td class="py-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${pStatus === 'paid' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${pStatus}</span></td></tr>`;
+            });
+
+            let activeLinks = 0;
+            const gradesCards = document.getElementById("gradesCardsContainer");
+            const recList = document.getElementById("recordingsListContainer");
+            gradesCards.innerHTML = ""; recList.innerHTML = "";
+
+            Object.keys(dbGrades).forEach(gKey => {
+                const items = dbGrades[gKey];
+                let count = 0;
+                Object.keys(items).forEach(itemKey => {
+                    if (items[itemKey].active) { activeLinks++; count++; }
+                    recList.innerHTML += `<div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center text-xs"><div><span class="font-bold text-brand-600 uppercase">${gKey}</span> - ${items[itemKey].title}</div><span class="px-2 py-0.5 rounded text-[10px] font-bold ${items[itemKey].active ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700'}">${items[itemKey].active ? 'Active' : 'Disabled'}</span></div>`;
+                });
+                gradesCards.innerHTML += `<div class="p-4 bg-slate-50 rounded-xl border border-slate-200"><h4 class="font-bold uppercase">${gKey}</h4><p class="text-xs text-slate-500 mt-1">Active Streams: <span class="font-bold text-brand-600">${count}</span></p></div>`;
+            });
+
+            document.getElementById("dashTotalStudents").innerText = totalStudents;
+            document.getElementById("dashActiveStudents").innerText = activeStudents;
+            document.getElementById("dashPendingPayments").innerText = unpaidCount;
+            document.getElementById("dashPaidPayments").innerText = paidCount;
+            document.getElementById("dashActiveLinks").innerText = activeLinks;
+            document.getElementById("dashCollectionRate").innerText = totalStudents > 0 ? Math.round((paidCount / totalStudents) * 100) + "%" : "0%";
+
+            renderCharts(gradeCounts, paidCount, unpaidCount, instCounts);
+        }
+
+        function renderCharts(gradeCounts, paid, unpaid, instCounts) {
+            const ctx1 = document.getElementById('dashGradeChart').getContext('2d');
+            if(chartInstances.grade) chartInstances.grade.destroy();
+            chartInstances.grade = new Chart(ctx1, { type: 'bar', data: { labels: Object.keys(gradeCounts), datasets: [{ label: 'Students', data: Object.values(gradeCounts), backgroundColor: '#3b82f6', borderRadius: 6 }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+            const ctx2 = document.getElementById('dashPaymentChart').getContext('2d');
+            if(chartInstances.pay) chartInstances.pay.destroy();
+            chartInstances.pay = new Chart(ctx2, { type: 'doughnut', data: { labels: ['Paid', 'Unpaid'], datasets: [{ data: [paid, unpaid], backgroundColor: ['#10b981', '#f59e0b'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+
+            const ctx3 = document.getElementById('instituteChart').getContext('2d');
+            if(chartInstances.inst) chartInstances.inst.destroy();
+            chartInstances.inst = new Chart(ctx3, { type: 'pie', data: { labels: Object.keys(instCounts), datasets: [{ data: Object.values(instCounts), backgroundColor: ['#3b82f6', '#6366f1', '#10b981', '#f59e0b'] }] }, options: { responsive: true, maintainAspectRatio: false } });
+        }
+    </script>
+</body>
+</html>
