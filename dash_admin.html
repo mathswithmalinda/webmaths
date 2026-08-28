@@ -42,12 +42,17 @@
         <div id="section-students" class="space-y-6">
             <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-white">Student Management</h2>
-                    <p class="text-slate-400 text-sm">Add students with passcode, assign institutes, and manage accounts.</p>
+                    <h2 class="text-2xl font-bold text-white">Student & Content Management</h2>
+                    <p class="text-slate-400 text-sm">Add students, add videos with access ticks, and manage accounts.</p>
                 </div>
-                <button onclick="openModal('addStudentModal')" class="w-full md:w-auto px-5 py-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20">
-                    <i class="fa-solid fa-user-plus"></i> Add New Student
-                </button>
+                <div class="flex gap-3 w-full md:w-auto">
+                    <button onclick="openModal('addVideoModal')" class="flex-1 md:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg">
+                        <i class="fa-solid fa-video"></i> Add Video
+                    </button>
+                    <button onclick="openModal('addStudentModal')" class="flex-1 md:flex-none px-5 py-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20">
+                        <i class="fa-solid fa-user-plus"></i> Add Student
+                    </button>
+                </div>
             </div>
 
             <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl p-4 sm:p-6">
@@ -143,7 +148,7 @@
                 </table>
             </div>
 
-            <!-- Mobile Responsive View Cards -->
+            <!-- Mobile View Cards -->
             <div id="paymentMobileCards" class="grid grid-cols-1 gap-4 md:hidden"></div>
         </div>
 
@@ -151,7 +156,6 @@
         <div id="section-notifications" class="space-y-6 hidden">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
-                <!-- Send Form -->
                 <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
                     <h2 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-paper-plane text-cyan-400 mr-2"></i>Send Custom Notification</h2>
                     
@@ -194,7 +198,6 @@
                     </div>
                 </div>
 
-                <!-- Active Notifications List (Scroll Optimized) -->
                 <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col max-h-[600px]">
                     <h2 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-list-check text-cyan-400 mr-2"></i>Active Notifications</h2>
                     <p class="text-slate-400 text-xs mb-4">මෙහි ඇති Delete බටන් එකෙන් Notification එකක් මකා දැමූ විට සියලුම සිසුන්ගෙන් සෘජුවම ඉවත් වේ. පැය 24 පහු වූ ඒවා auto-delete වේ.</p>
@@ -209,7 +212,7 @@
 
     </div>
 
-    <!-- MODAL: ADD STUDENT -->
+    <!-- MODAL 1: ADD STUDENT -->
     <div id="addStudentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
         <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
             <h3 class="text-xl font-bold text-white">Add New Student</h3>
@@ -268,6 +271,111 @@
         </div>
     </div>
 
+    <!-- MODAL 2: ADD VIDEO -->
+    <div id="addVideoModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <h3 class="text-xl font-bold text-white">Add New Class Video</h3>
+            <form id="addVideoForm" onsubmit="saveVideo(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">TARGET GRADE</label>
+                    <select id="videoGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        <option value="grade06">Grade 6</option>
+                        <option value="grade07">Grade 7</option>
+                        <option value="grade08">Grade 8</option>
+                        <option value="grade09">Grade 9</option>
+                        <option value="grade10">Grade 10</option>
+                        <option value="grade11">Grade 11</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">LESSON TITLE</label>
+                    <input type="text" id="videoTitle" required placeholder="e.g. Day 01 Theory Class" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">YOUTUBE / MEDIA LINK</label>
+                    <input type="text" id="videoUrl" required placeholder="https://www.youtube.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-2">ACCESS TYPE (TICK OPTIONS)</label>
+                    <div class="flex gap-4 bg-slate-900 p-3 rounded-xl border border-slate-700">
+                        <label class="flex items-center text-sm gap-2 text-slate-300 cursor-pointer">
+                            <input type="checkbox" id="videoTypeTheory" checked class="accent-cyan-500 w-4 h-4"> Theory
+                        </label>
+                        <label class="flex items-center text-sm gap-2 text-slate-300 cursor-pointer">
+                            <input type="checkbox" id="videoTypePaper" checked class="accent-cyan-500 w-4 h-4"> Paper Class
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal('addVideoModal')" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl">Save Video</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL 3: EDIT STUDENT -->
+    <div id="editStudentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
+        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
+            <h3 class="text-xl font-bold text-white">Edit Student Details</h3>
+            <form id="editStudentForm" onsubmit="updateStudent(event)" class="space-y-4">
+                <input type="hidden" id="editOriginalClassId">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">FULL NAME</label>
+                    <input type="text" id="editStudentName" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">STUDENT ID (READ-ONLY)</label>
+                    <input type="text" id="editClassId" readonly class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-slate-400 cursor-not-allowed">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">PASSCODE</label>
+                    <input type="text" id="editPasscode" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">GRADE SELECT</label>
+                    <select id="editGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        <option value="6">Grade 6</option>
+                        <option value="7">Grade 7</option>
+                        <option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                        <option value="11">Grade 11</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 mb-1">INSTITUTE</label>
+                    <select id="editInstitute" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
+                        <option value="The Tutor">The Tutor</option>
+                        <option value="Nimthera">Nimthera</option>
+                        <option value="Hope">Hope</option>
+                        <option value="Aps">Aps</option>
+                        <option value="Online">Online</option>
+                    </select>
+                </div>
+                
+                <div class="border-t border-slate-700 pt-3">
+                    <label class="block text-xs font-semibold text-slate-400 mb-2">COURSE ACCESS TYPE</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center text-sm gap-2 text-slate-300">
+                            <input type="checkbox" id="editSubTheory" class="accent-cyan-500 w-4 h-4"> Theory
+                        </label>
+                        <label class="flex items-center text-sm gap-2 text-slate-300">
+                            <input type="checkbox" id="editSubPaper" class="accent-cyan-500 w-4 h-4"> Paper Class
+                        </label>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeModal('editStudentModal')" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
+                    <button type="submit" class="px-5 py-2 bg-cyan-500 text-slate-950 font-bold rounded-xl">Update Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
@@ -296,48 +404,23 @@
             return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         }
 
-        // Student කෙනෙකු Lock වී ඇත්දැයි පරීක්ෂා කිරීමේ ශ්‍රිතය
         function isStudentLocked(student, isPaid) {
-            if (isPaid) return false; // Payment කළා නම් Unlocked
-            if (new Date().getDate() <= 14) return false; // 14 වනදා තෙක් Unlocked
-
-            // 14 වනදා පසු වුවත් Temporary Access වලංගු නම් Unlocked
+            if (isPaid) return false;
+            if (new Date().getDate() <= 14) return false;
             const now = Date.now();
-            if (student.tempAccessUntil && student.tempAccessUntil > now) {
-                return false; 
-            }
-
-            return true; // 14 පසුවී Paid නැත්නම් සහ Temp Access නැත්නම් Locked
+            if (student.tempAccessUntil && student.tempAccessUntil > now) return false;
+            return true;
         }
 
-        // Temporary Access ලබාදීම සහ ඉවත් කිරීම (Toggle Function)
         function toggleTempAccess(classId, currentTempAccessUntil) {
             const now = Date.now();
             const hasActiveAccess = currentTempAccessUntil && currentTempAccessUntil > now;
-
             if (hasActiveAccess) {
-                // Access දැනට තිබේ නම් -> Remove කිරීම
-                if (confirm(`Student ID: ${classId} ගේ තාවකාලික Access එක ඉවත් කිරීමට අවශ්‍යද?`)) {
-                    usersRef.child(`${classId}/tempAccessUntil`).remove((err) => {
-                        if (!err) {
-                            alert(`❌ Student ID: ${classId} ගේ Temporary Access එක ඉවත් කරන ලදී!`);
-                        } else {
-                            alert("Error: " + err.message);
-                        }
-                    });
+                if (confirm(`Remove temporary access for ${classId}?`)) {
+                    usersRef.child(`${classId}/tempAccessUntil`).remove();
                 }
             } else {
-                // Access නැත්නම් -> දින 7ක් ලබා දීම
-                const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
-                const accessUntil = now + SEVEN_DAYS_MS;
-
-                usersRef.child(`${classId}/tempAccessUntil`).set(accessUntil, (err) => {
-                    if (!err) {
-                        alert(`✅ Student ID: ${classId} ට දින 7ක තාවකාලික access ලබා දෙන ලදී!`);
-                    } else {
-                        alert("Error: " + err.message);
-                    }
-                });
+                usersRef.child(`${classId}/tempAccessUntil`).set(now + (7 * 86400000));
             }
         }
 
@@ -362,10 +445,77 @@
             usersRef.child(classId).set(newStudentObj, (error) => {
                 if (!error) {
                     closeModal('addStudentModal');
-                    alert(`Student added successfully with Passcode: ${passcode}`);
+                    alert(`Student added with Passcode: ${passcode}`);
                     document.getElementById('addStudentForm').reset();
+                }
+            });
+        }
+
+        function editStudent(classId) {
+            const student = allStudents[classId];
+            if (!student) return;
+
+            document.getElementById('editOriginalClassId').value = classId;
+            document.getElementById('editClassId').value = student.classId || classId;
+            document.getElementById('editStudentName').value = student.name || '';
+            document.getElementById('editPasscode').value = student.passcode || '';
+            document.getElementById('editGrade').value = student.grade || '6';
+            document.getElementById('editInstitute').value = student.institute || 'The Tutor';
+            document.getElementById('editSubTheory').checked = student.subCourses ? !!student.subCourses.theory : true;
+            document.getElementById('editSubPaper').checked = student.subCourses ? !!student.subCourses.paper : true;
+
+            openModal('editStudentModal');
+        }
+
+        function updateStudent(e) {
+            e.preventDefault();
+            const classId = document.getElementById('editOriginalClassId').value;
+            const name = document.getElementById('editStudentName').value.trim();
+            const passcode = document.getElementById('editPasscode').value.trim();
+            const grade = parseInt(document.getElementById('editGrade').value);
+            const institute = document.getElementById('editInstitute').value;
+            const subTheory = document.getElementById('editSubTheory').checked;
+            const subPaper = document.getElementById('editSubPaper').checked;
+
+            const updatedData = {
+                name, passcode, grade,
+                page: `grade${grade}.html`,
+                institute,
+                subCourses: { theory: subTheory, paper: subPaper }
+            };
+
+            usersRef.child(classId).update(updatedData, (error) => {
+                if (!error) {
+                    closeModal('editStudentModal');
+                    alert(`Student updated successfully!`);
                 } else {
-                    alert('Database Error: ' + error.message);
+                    alert(`Failed to update student: ${error.message}`);
+                }
+            });
+        }
+
+        function saveVideo(e) {
+            e.preventDefault();
+            const grade = document.getElementById('videoGrade').value;
+            const title = document.getElementById('videoTitle').value.trim();
+            const url = document.getElementById('videoUrl').value.trim();
+            const isTheory = document.getElementById('videoTypeTheory').checked;
+            const isPaper = document.getElementById('videoTypePaper').checked;
+
+            let category = "both";
+            if (isTheory && !isPaper) category = "theory";
+            else if (!isTheory && isPaper) category = "paper";
+
+            const payload = {
+                title, url, active: true, teacher: "Malinda Sir",
+                category, createdAt: Date.now()
+            };
+
+            db.ref(`grades/${grade}`).push(payload, (error) => {
+                if (!error) {
+                    alert("✅ Video Added Successfully!");
+                    closeModal('addVideoModal');
+                    document.getElementById('addVideoForm').reset();
                 }
             });
         }
@@ -375,31 +525,21 @@
         }
 
         function removeStudent(classId) {
-            if (confirm(`Are you sure you want to delete student ID: ${classId}?`)) {
-                usersRef.child(classId).remove();
-            }
+            if (confirm(`Delete student ID: ${classId}?`)) usersRef.child(classId).remove();
         }
 
         function togglePayment(classId, isPaid) {
             const monthKey = getCurrentMonthKey();
-            
             usersRef.child(`${classId}/payments/${monthKey}`).set({
                 status: isPaid ? 'paid' : 'unpaid',
                 paidAt: new Date().toISOString().split('T')[0],
                 updatedBy: 'admin'
             }).then(() => {
                 if (isPaid) {
-                    const notifPayload = {
+                    db.ref(`notifications/students/${classId}`).push({
                         title: "Payment Confirmed! ✅",
-                        message: `${monthKey} මාසය සඳහා ඔබගේ පන්ති ගාස්තු ගෙවීම සාර්ථකව තහවුරු කරන ලදී. ස්තූතියි!`,
-                        link: "",
+                        message: `${monthKey} මාසය සඳහා පන්ති ගාස්තු ගෙවීම තහවුරු කරන ලදී.`,
                         createdAt: Date.now()
-                    };
-
-                    db.ref(`notifications/students/${classId}`).push(notifPayload, (err) => {
-                        if (!err) {
-                            alert(`✅ Student ID: ${classId} සඳහා Payment එක Paid වූ අතර Notification එකක්ද යවන ලදී!`);
-                        }
                     });
                 }
             });
@@ -423,6 +563,7 @@
                             <td class="p-4">${s.institute || 'N/A'}</td>
                             <td class="p-4">${s.status === 'blocked' ? `<span class="text-red-400">Blocked</span>` : `<span class="text-emerald-400">Active</span>`}</td>
                             <td class="p-4 text-right flex justify-end gap-2">
+                                <button onclick="editStudent('${s.classId || key}')" class="px-3 py-1 bg-amber-600/80 hover:bg-amber-600 text-white text-xs rounded transition"><i class="fa-solid fa-pen-to-square mr-1"></i>Edit</button>
                                 <button onclick="toggleBlockStatus('${s.classId || key}', '${s.status}')" class="px-3 py-1 bg-slate-700 text-xs rounded">${s.status === 'blocked' ? 'Unblock' : 'Block'}</button>
                                 <button onclick="removeStudent('${s.classId || key}')" class="px-3 py-1 bg-red-900/40 text-red-300 text-xs rounded">Delete</button>
                             </td>
@@ -434,8 +575,7 @@
         function renderPaymentTable() {
             const tbody = document.getElementById('paymentTableBody');
             const mobileCards = document.getElementById('paymentMobileCards');
-            tbody.innerHTML = '';
-            mobileCards.innerHTML = '';
+            tbody.innerHTML = ''; mobileCards.innerHTML = '';
 
             const monthKey = getCurrentMonthKey();
             const instFilter = document.getElementById('instituteFilter').value;
@@ -454,27 +594,13 @@
                 const isLocked = isStudentLocked(s, isPaid);
                 const hasTempAccess = s.tempAccessUntil && s.tempAccessUntil > now;
 
-                // Dynamic Status Badge
-                let statusHTML = '';
-                if (isLocked) {
-                    statusHTML = `<span class="text-red-400 text-xs flex items-center gap-1"><i class="fa-solid fa-lock"></i> Locked</span>`;
-                } else if (hasTempAccess && !isPaid) {
-                    const daysLeft = Math.ceil((s.tempAccessUntil - now) / (1000 * 60 * 60 * 24));
-                    statusHTML = `<span class="text-amber-400 text-xs flex items-center gap-1"><i class="fa-solid fa-clock"></i> Temp Access (${daysLeft}d left)</span>`;
-                } else {
-                    statusHTML = `<span class="text-emerald-400 text-xs flex items-center gap-1"><i class="fa-solid fa-lock-open"></i> Allowed</span>`;
-                }
+                let statusHTML = isLocked ? `<span class="text-red-400 text-xs"><i class="fa-solid fa-lock"></i> Locked</span>` :
+                    (hasTempAccess && !isPaid ? `<span class="text-amber-400 text-xs"><i class="fa-solid fa-clock"></i> Temp Access</span>` :
+                    `<span class="text-emerald-400 text-xs"><i class="fa-solid fa-lock-open"></i> Allowed</span>`);
 
-                // Dynamic Toggle Button Style & Text
-                const tempBtnClass = hasTempAccess 
-                    ? "bg-red-500/20 hover:bg-red-500/30 text-red-300 border-red-500/40" 
-                    : "bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40";
-                
-                const tempBtnText = hasTempAccess 
-                    ? `<i class="fa-solid fa-user-xmark mr-1"></i> Remove Temp Access` 
-                    : `<i class="fa-solid fa-key mr-1"></i> Give 7 Days Pass`;
-                
-                // Desktop Row
+                const tempBtnClass = hasTempAccess ? "bg-red-500/20 text-red-300 border-red-500/40" : "bg-amber-500/20 text-amber-300 border-amber-500/40";
+                const tempBtnText = hasTempAccess ? `Remove Temp Access` : `Give 7 Days Pass`;
+
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
                         <td class="p-4 font-mono text-cyan-400">${s.classId || key}</td>
@@ -485,52 +611,16 @@
                         <td class="p-4">${isPaid ? `<span class="text-emerald-400 font-bold">PAID</span>` : `<span class="text-red-400 font-bold">NOT PAID</span>`}</td>
                         <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-6 h-6 accent-cyan-500 cursor-pointer"></td>
                         <td class="p-4 text-center">
-                            <button onclick="toggleTempAccess('${s.classId || key}', ${s.tempAccessUntil || 0})" class="px-3 py-1.5 border text-xs font-semibold rounded-lg transition ${tempBtnClass}">
+                            <button onclick="toggleTempAccess('${s.classId || key}', ${s.tempAccessUntil || 0})" class="px-3 py-1.5 border text-xs font-semibold rounded-lg ${tempBtnClass}">
                                 ${tempBtnText}
                             </button>
                         </td>
                     </tr>`;
-
-                // Mobile Card View
-                mobileCards.innerHTML += `
-                    <div class="bg-slate-800 border border-slate-700 rounded-2xl p-4 shadow-lg flex flex-col gap-3">
-                        <div class="flex justify-between items-start border-b border-slate-700/60 pb-2">
-                            <div>
-                                <span class="font-mono text-cyan-400 font-bold text-base">${s.classId || key}</span>
-                                <h3 class="text-white font-semibold text-sm">${s.name || 'N/A'}</h3>
-                            </div>
-                            <span class="text-xs px-2.5 py-1 rounded-lg ${isPaid ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-red-950 text-red-400 border border-red-800'} font-bold">
-                                ${isPaid ? 'PAID' : 'NOT PAID'}
-                            </span>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-2 text-xs text-slate-400">
-                            <div><strong class="text-slate-300">Grade & Inst:</strong> Gr.${s.grade || '-'} - ${s.institute}</div>
-                            <div><strong class="text-slate-300">Courses:</strong> T:${s.subCourses?.theory ? 'Y':'N'} | P:${s.subCourses?.paper ? 'Y':'N'}</div>
-                            <div><strong class="text-slate-300">State:</strong> ${statusHTML}</div>
-                        </div>
-
-                        <div class="flex items-center justify-between bg-slate-900/80 p-3 rounded-xl border border-slate-700/50 mt-1 gap-2">
-                            <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-300">
-                                <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked)" class="w-5 h-5 accent-cyan-500 rounded">
-                                Toggle Pay
-                            </label>
-                            <button onclick="toggleTempAccess('${s.classId || key}', ${s.tempAccessUntil || 0})" class="px-3 py-1.5 border text-xs font-semibold rounded-lg ${tempBtnClass}">
-                                ${tempBtnText}
-                            </button>
-                        </div>
-                    </div>`;
             });
         }
 
         function toggleStudentIdInput() {
-            const target = document.getElementById('notifTargetGrade').value;
-            const box = document.getElementById('singleStudentBox');
-            if (target === "SINGLE_STUDENT") {
-                box.classList.remove('hidden');
-            } else {
-                box.classList.add('hidden');
-            }
+            document.getElementById('singleStudentBox').classList.toggle('hidden', document.getElementById('notifTargetGrade').value !== "SINGLE_STUDENT");
         }
 
         function sendQuickNotification() {
@@ -539,134 +629,65 @@
             const message = document.getElementById('notifMessage').value.trim();
             const link = document.getElementById('notifLink').value.trim();
 
-            if (!title || !message) {
-                alert("⚠️ කරුණාකර Title සහ Message ලබා දෙන්න.");
-                return;
-            }
+            if (!title || !message) { alert("⚠️ Enter Title and Message"); return; }
 
-            const notifPayload = { title, message, link: link || "", createdAt: Date.now() };
+            let path = target === "SINGLE_STUDENT" ? `notifications/students/${document.getElementById('notifStudentId').value.trim()}` :
+                       (target === "global" ? "notifications/global" : `notifications/${target}`);
 
-            let path = "";
-            if (target === "SINGLE_STUDENT") {
-                const studentId = document.getElementById('notifStudentId').value.trim();
-                if (!studentId) {
-                    alert("⚠️ කරුණාකර Student ID එක ඇතුළත් කරන්න.");
-                    return;
-                }
-                path = `notifications/students/${studentId}`;
-            } else if (target === "global") {
-                path = "notifications/global";
-            } else {
-                path = `notifications/${target}`;
-            }
-
-            db.ref(path).push(notifPayload, (err) => {
-                if (!err) {
-                    alert("🚀 Notification එක සාර්ථකව යවන ලදී!");
-                    document.getElementById('notifTitle').value = "";
-                    document.getElementById('notifMessage').value = "";
-                    document.getElementById('notifLink').value = "";
-                    document.getElementById('notifStudentId').value = "";
-                } else {
-                    alert("Error: " + err.message);
-                }
+            db.ref(path).push({ title, message, link: link || "", createdAt: Date.now() }, (err) => {
+                if (!err) alert("🚀 Notification Sent!");
             });
         }
 
         function deleteNotification(path) {
-            if (confirm("මෙම Notification එක මකා දැමීමට අවශ්‍යද?")) {
-                db.ref(path).remove().then(() => alert("Notification එක Delete විය!"));
-            }
+            if (confirm("Delete this Notification?")) db.ref(path).remove();
         }
 
         db.ref('notifications').on('value', (snapshot) => {
             const data = snapshot.val();
             const container = document.getElementById('adminNotifList');
             if (!container) return;
-            
             container.innerHTML = "";
-            if (!data) {
-                container.innerHTML = "<p class='text-slate-500 text-sm text-center py-4'>දැනට සක්‍රීය නොටිෆිකේෂන් නැත.</p>";
-                return;
-            }
+            if (!data) return;
 
             const now = Date.now();
-            const TWENTY_FOUR_HOURS = 24 * 60 * 60 * 1000;
-            let count = 0;
-
-            const processGroup = (groupObj, groupPath, groupName) => {
-                if (!groupObj) return;
-                Object.keys(groupObj).forEach(key => {
-                    const item = groupObj[key];
-                    const createdTime = item.createdAt || 0;
-
-                    if (now - createdTime > TWENTY_FOUR_HOURS) {
-                        db.ref(`${groupPath}/${key}`).remove();
-                    } else {
-                        count++;
-                        const timeStr = createdTime ? new Date(createdTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'N/A';
+            const processGroup = (obj, path, name) => {
+                if (!obj) return;
+                Object.keys(obj).forEach(k => {
+                    const item = obj[k];
+                    if (now - (item.createdAt || 0) > 86400000) db.ref(`${path}/${k}`).remove();
+                    else {
                         container.innerHTML += `
-                            <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center gap-3">
-                                <div class="overflow-hidden">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <span class="bg-cyan-950 text-cyan-400 text-[10px] font-bold px-2 py-0.5 rounded border border-cyan-800 uppercase">${groupName}</span>
-                                        <h4 class="text-sm font-bold text-white truncate">${item.title}</h4>
-                                    </div>
-                                    <p class="text-xs text-slate-400 truncate">${item.message}</p>
-                                    <span class="text-[10px] text-slate-500"><i class="fa-regular fa-clock mr-1"></i>Sent: ${timeStr}</span>
+                            <div class="bg-slate-900/80 border border-slate-700/60 p-3 rounded-xl flex justify-between items-center">
+                                <div>
+                                    <span class="bg-cyan-950 text-cyan-400 text-[10px] px-2 py-0.5 rounded border border-cyan-800">${name}</span>
+                                    <h4 class="text-sm font-bold text-white">${item.title}</h4>
                                 </div>
-                                <button onclick="deleteNotification('${groupPath}/${key}')" class="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300 text-xs font-semibold rounded-lg transition shrink-0">
-                                    <i class="fa-solid fa-trash-can mr-1"></i> Delete
-                                </button>
-                            </div>
-                        `;
+                                <button onclick="deleteNotification('${path}/${k}')" class="px-3 py-1.5 bg-red-950/60 text-red-300 text-xs rounded">Delete</button>
+                            </div>`;
                     }
                 });
             };
 
-            ['global', 'grade6', 'grade7', 'grade8', 'grade9', 'grade10', 'grade11'].forEach(grp => {
-                if (data[grp]) processGroup(data[grp], `notifications/${grp}`, grp);
-            });
-
-            if (data.students) {
-                Object.keys(data.students).forEach(stId => {
-                    processGroup(data.students[stId], `notifications/students/${stId}`, `ID: ${stId}`);
-                });
-            }
-
-            if (count === 0) {
-                container.innerHTML = "<p class='text-slate-500 text-sm text-center py-4'>දැනට සක්‍රීය නොටිෆිකේෂන් නැත.</p>";
-            }
+            ['global','grade6','grade7','grade8','grade9','grade10','grade11'].forEach(g => data[g] && processGroup(data[g], `notifications/${g}`, g));
         });
 
         function triggerYearPast() {
-            const secretPass = prompt("Enter Secret Admin Passcode:");
-            if (secretPass === "admin123#") {
-                if (confirm("Promote all Grade 6-10 students?")) {
-                    const updates = {};
-                    Object.keys(allStudents).forEach(key => {
-                        const curGrade = parseInt(allStudents[key].grade);
-                        if (curGrade < 11) {
-                            updates[`/users/${key}/grade`] = curGrade + 1;
-                            updates[`/users/${key}/page`] = `grade${curGrade + 1}.html`;
-                        } else if (curGrade === 11) {
-                            updates[`/users/${key}/grade`] = "Home";
-                            updates[`/users/${key}/page`] = "index.html";
-                        }
-                    });
-                    db.ref().update(updates, () => alert("Year promotion completed!"));
-                }
-            } else { alert("Incorrect Passcode!"); }
+            if (prompt("Secret Admin Passcode:") === "admin123#") {
+                const updates = {};
+                Object.keys(allStudents).forEach(k => {
+                    const g = parseInt(allStudents[k].grade);
+                    if (g < 11) { updates[`/users/${k}/grade`] = g + 1; updates[`/users/${k}/page`] = `grade${g+1}.html`; }
+                });
+                db.ref().update(updates, () => alert("Promotion finished!"));
+            }
         }
 
         function switchTab(tab) {
-            document.getElementById('section-students').classList.toggle('hidden', tab !== 'students');
-            document.getElementById('section-payments').classList.toggle('hidden', tab !== 'payments');
-            document.getElementById('section-notifications').classList.toggle('hidden', tab !== 'notifications');
-            
-            document.getElementById('btn-tab-students').className = tab === 'students' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
-            document.getElementById('btn-tab-payments').className = tab === 'payments' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
-            document.getElementById('btn-tab-notifications').className = tab === 'notifications' ? 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-cyan-600 text-white flex-1 sm:flex-initial' : 'px-3 sm:px-4 py-2 rounded-lg font-medium text-xs sm:text-sm transition bg-slate-700 text-slate-300 hover:bg-slate-600 flex-1 sm:flex-initial';
+            ['students','payments','notifications'].forEach(t => {
+                document.getElementById(`section-${t}`).classList.toggle('hidden', tab !== t);
+                document.getElementById(`btn-tab-${t}`).className = tab === t ? 'px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-cyan-600 text-white' : 'px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm bg-slate-700 text-slate-300';
+            });
         }
         function filterStudents() { renderStudentsTable(); }
         function filterPayments() { renderPaymentTable(); }
