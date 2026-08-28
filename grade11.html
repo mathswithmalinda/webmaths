@@ -131,7 +131,7 @@
 
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-      import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+      import { getDatabase, ref, onValue, get, remove } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyBkC75ZGm1iXXYdKR8lDNIP_l27RR5b8fM",
@@ -177,32 +177,74 @@
       const studentClassId = localStorage.getItem("studentId") || ""; 
       document.getElementById("welcome-message").textContent = `Hello, ${studentName} 👋`;
 
-      // Fetch Recordings
-      onValue(ref(db, "grades/grade11"), (snapshot) => {
-        const data = snapshot.val();
-        recSection.innerHTML = ""; 
+      // Fetch Recordings with Access Filtering Logic
+      async function loadRecordings() {
+        let studentSubCourses = { theory: true, paper: true }; // Default Access
 
-        if (!data) {
-          recSection.innerHTML = "<div class='p-5 text-muted'>දැනට පටිගත කිරීම් කිසිවක් නොමැත.</div>";
-          return;
+        // 1. Fetch logged-in student's subCourses access from Firebase
+        if (studentClassId) {
+          try {
+            const userSnap = await get(ref(db, `users/${studentClassId}`));
+            if (userSnap.exists()) {
+              const userData = userSnap.val();
+              if (userData.subCourses) {
+                studentSubCourses = userData.subCourses;
+              }
+            }
+          } catch (err) {
+            console.error("Error fetching student profile:", err);
+          }
         }
 
-        Object.keys(data).forEach((key) => {
-          const item = data[key];
-          if (item.active) {
-            const card = document.createElement("div");
-            card.className = "card overflow-hidden shadow-sm rounded-4 border-0 mb-4";
-            card.innerHTML = `
-              <div class="card-body p-4 text-center">
-                <h2 class="fw-bolder mb-3">${item.title}</h2>
-                <button class="btn btn-outline-primary rounded-pill px-4" onclick="window.handleMediaLink('${item.url}')">
-                  <i class="bi bi-play-circle-fill"></i> View Video
-                </button>
-              </div>`;
-            recSection.appendChild(card);
+        // 2. Listen to Videos and filter based on category and student access
+        onValue(ref(db, "grades/grade11"), (snapshot) => {
+          const data = snapshot.val();
+          recSection.innerHTML = ""; 
+
+          if (!data) {
+            recSection.innerHTML = "<div class='p-5 text-muted'>දැනට පටිගත කිරීම් කිසිවක් නොමැත.</div>";
+            return;
+          }
+
+          let hasAccessibleVideos = false;
+
+          Object.keys(data).forEach((key) => {
+            const item = data[key];
+            const videoCategory = item.category || "both"; // 'theory', 'paper', or 'both'
+
+            // Check if student has access to this video
+            let canAccess = false;
+            if (videoCategory === "both") {
+              canAccess = true;
+            } else if (videoCategory === "theory" && studentSubCourses.theory) {
+              canAccess = true;
+            } else if (videoCategory === "paper" && studentSubCourses.paper) {
+              canAccess = true;
+            }
+
+            if (item.active && canAccess) {
+              hasAccessibleVideos = true;
+              const card = document.createElement("div");
+              card.className = "card overflow-hidden shadow-sm rounded-4 border-0 mb-4";
+              card.innerHTML = `
+                <div class="card-body p-4 text-center">
+                  <h2 class="fw-bolder mb-3">${item.title}</h2>
+                  <button class="btn btn-outline-primary rounded-pill px-4" onclick="window.handleMediaLink('${item.url}')">
+                    <i class="bi bi-play-circle-fill"></i> View Video
+                  </button>
+                </div>`;
+              recSection.appendChild(card);
+            }
+          });
+
+          if (!hasAccessibleVideos) {
+            recSection.innerHTML = "<div class='p-5 text-muted'>ඔබට අදාළ පන්ති පටිගත කිරීම් කිසිවක් නොමැත.</div>";
           }
         });
-      });
+      }
+
+      // Initialize Recordings Filter
+      loadRecordings();
 
       // Notifications Listener with Unread State Tracking
       const notifList = document.getElementById("notifList");
