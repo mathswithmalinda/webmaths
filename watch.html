@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no, maximum-scale=1.0, user-scalable=no">
     <title>Video Player - ආදරණීය ගණිතය පන්තිය</title>
     
     <!-- iOS / Safari & PWA Meta Tags -->
@@ -13,17 +13,33 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #000000;
+            --card-bg: #090a0f;
+            --accent-color: #7b2cbf;
+            --control-bg: rgba(0, 0, 0, 0.65);
+            --text-main: #ffffff;
+            --text-sub: #a0a5b5;
+        }
+
         body {
-            background-color: #0d1117;
-            color: #ffffff;
+            background-color: #0b0c10;
+            color: var(--text-main);
             user-select: none;
             -webkit-user-select: none;
             overflow-x: hidden;
-            font-family: system-ui, -apple-system, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .main-container {
-            max-width: 900px;
+            width: 100%;
+            max-width: 480px;
             margin: 0 auto;
             padding: 12px;
         }
@@ -33,35 +49,63 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 16px;
+            padding: 8px 4px 16px 4px;
         }
 
         .btn-back {
-            padding: 6px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            color: #fff;
+            padding: 8px 16px;
             font-size: 13px;
             border-radius: 50px;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
         }
 
         .header-title {
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sub);
+            letter-spacing: 0.3px;
         }
 
-        @media (max-width: 576px) {
-            .header-title { font-size: 12px; }
-            .btn-back { padding: 5px 12px; font-size: 12px; }
-        }
-
-        /* Video Container */
+        /* Video Container Card */
         .player-container {
             position: relative;
             width: 100%;
-            background: #000;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.8);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Bar Overlay inside Video Frame */
+        .top-controls-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 25;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+        }
+
+        .top-controls-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .video-wrapper {
@@ -80,102 +124,224 @@
             width: 100% !important;
             height: 100% !important;
             border: 0;
-            pointer-events: none; /* Disables all clicks on YouTube native elements */
+            pointer-events: none;
         }
 
-        /* Full Click Shield to prevent YT interactions */
+        /* Center Gesture Overlay Controls */
+        .center-controls {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            z-index: 22;
+        }
+
+        .btn-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: var(--control-bg);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .btn-circle:active {
+            transform: scale(0.9);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-circle.play-btn {
+            width: 64px;
+            height: 64px;
+            font-size: 26px;
+            background: rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Full Click Shield */
         .full-shield {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: calc(100% - 48px);
+            height: 100%;
             z-index: 10;
             background: transparent;
         }
 
-        /* Custom Control Bar Styling */
-        .custom-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 48px;
-            background: rgba(13, 17, 23, 0.95);
-            display: flex;
-            align-items: center;
-            padding: 0 10px;
-            gap: 6px;
-            z-index: 20;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        /* Bottom Details & Info Area */
+        .player-info-section {
+            padding: 20px;
+            background: var(--card-bg);
         }
 
-        .control-btn {
-            background: none;
-            border: none;
-            color: #fff;
+        .watching-tag {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            letter-spacing: 0.8px;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .video-main-title {
             font-size: 16px;
-            cursor: pointer;
-            padding: 4px 6px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 6px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .video-sub-info {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 18px;
+        }
+
+        /* Timeline & Controls Section */
+        .timeline-container {
             display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-        }
-
-        .control-btn:hover {
-            color: #0dcaf0;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .seek-bar {
-            flex-grow: 1;
-            accent-color: #0dcaf0;
-            cursor: pointer;
-            height: 4px;
         }
 
         .time-display {
-            font-size: 11px;
-            color: #aaa;
-            white-space: nowrap;
+            font-size: 12px;
+            font-weight: 600;
+            color: #fff;
+            font-variant-numeric: tabular-nums;
         }
 
-        .speed-select {
-            background: #161b22;
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            font-size: 11px;
-            border-radius: 4px;
-            padding: 2px 4px;
+        .seek-bar {
+            width: 100%;
+            accent-color: #ff3b30;
             cursor: pointer;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.15);
+            appearance: none;
+            -webkit-appearance: none;
             outline: none;
         }
 
+        .seek-bar::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #ff3b30;
+            box-shadow: 0 0 8px rgba(255, 59, 48, 0.8);
+            cursor: pointer;
+        }
+
+        /* Select & Badges */
+        .speed-select {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 12px;
+            border-radius: 20px;
+            padding: 4px 10px;
+            cursor: pointer;
+            outline: none;
+            backdrop-filter: blur(10px);
+        }
+
+        .speed-select option {
+            background: #161b22;
+            color: #fff;
+        }
+
         .quality-badge {
-            font-size: 10px;
-            color: #0dcaf0;
-            background: rgba(13, 202, 240, 0.1);
-            border: 1px solid rgba(13, 202, 240, 0.3);
-            padding: 2px 5px;
-            border-radius: 4px;
+            font-size: 11px;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4px 10px;
+            border-radius: 20px;
             font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .control-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Live Badge Dynamic Styling */
+        .live-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 59, 48, 0.15);
+            color: #ff3b30;
+            border: 1px solid rgba(255, 59, 48, 0.3);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .live-btn .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #888;
+            border-radius: 50%;
+        }
+
+        .live-btn.is-live {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ffffff;
+        }
+
+        .live-btn.is-live .dot {
+            background-color: #ff0000;
+            box-shadow: 0 0 6px #ff0000;
         }
 
         /* Watermark */
         #watermark {
             position: absolute;
             z-index: 15;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.5);
             font-size: 11px;
             font-weight: 600;
-            font-family: sans-serif;
             pointer-events: none;
             transition: all 3s ease-in-out;
-            padding: 3px 8px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 4px;
+            padding: 4px 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
             white-space: nowrap;
         }
 
@@ -186,11 +352,12 @@
             height: 100vh !important;
             border-radius: 0 !important;
             background: #000;
+            max-width: 100% !important;
         }
 
         :fullscreen .video-wrapper,
         :-webkit-full-screen .video-wrapper {
-            height: calc(100vh - 48px) !important;
+            height: calc(100vh - 120px) !important;
             padding-bottom: 0 !important;
         }
 
@@ -202,8 +369,8 @@
             justify-content: center;
             padding: 40px 20px;
             text-align: center;
-            background: #161b22;
-            border-radius: 12px;
+            background: var(--card-bg);
+            border-radius: 28px;
             border: 1px solid rgba(255,255,255,0.1);
         }
     </style>
@@ -213,17 +380,41 @@
     <div class="main-container">
         <!-- Header -->
         <div class="player-header">
-            <button onclick="history.back()" class="btn btn-outline-light btn-back">
-                <i class="bi bi-arrow-left me-1"></i> ආපසු (Back)
+            <button onclick="history.back()" class="btn btn-back">
+                <i class="bi bi-arrow-left me-1"></i> Back
             </button>
-            <span class="text-info header-title">ආදරණීය ගණිතය Secure Player</span>
+            <span class="header-title">ආදරණීය ගණිතය Secure Player</span>
         </div>
 
         <!-- Video Player Section -->
         <div id="videoSection" class="player-container">
             <div class="video-wrapper" id="videoWrapper">
+                <!-- Top Overlays (Quality, Speed, Mute, Fullscreen) -->
+                <div class="top-controls-bar">
+                    <span id="qualityLabel" class="quality-badge" title="Current Quality">Auto</span>
+                    <div class="top-controls-right">
+                        <select id="speedSelect" class="speed-select" onchange="changeSpeed(this.value)" title="Playback Speed">
+                            <option value="0.5">0.5x</option>
+                            <option value="0.75">0.75x</option>
+                            <option value="1" selected>1.0x</option>
+                            <option value="1.25">1.25x</option>
+                            <option value="1.5">1.5x</option>
+                            <option value="2">2.0x</option>
+                        </select>
+                        <button class="control-btn" title="Mute/Unmute" onclick="toggleMute()"><i id="muteIcon" class="bi bi-volume-up-fill"></i></button>
+                        <button class="control-btn" title="Full Screen" onclick="toggleCustomFullScreen()"><i class="bi bi-fullscreen"></i></button>
+                    </div>
+                </div>
+
                 <!-- Watermark -->
                 <div id="watermark">Loading User...</div>
+
+                <!-- Center Gesture Overlay Controls -->
+                <div class="center-controls">
+                    <button class="btn-circle" title="Rewind 10s" onclick="skipSeconds(-10)"><i class="bi bi-arrow-counterclockwise"></i></button>
+                    <button class="btn-circle play-btn" title="Play/Pause" onclick="togglePlay()"><i id="playIcon" class="bi bi-play-fill"></i></button>
+                    <button class="btn-circle" title="Forward 10s" onclick="skipSeconds(10)"><i class="bi bi-arrow-clockwise"></i></button>
+                </div>
 
                 <!-- Full Shield overlay prevents clicking YT UI -->
                 <div class="full-shield" onclick="togglePlay()"></div>
@@ -232,31 +423,28 @@
                 <div id="ytPlayer"></div>
             </div>
 
-            <!-- Custom Safe Controls -->
-            <div class="custom-controls">
-                <button class="control-btn" title="Play/Pause" onclick="togglePlay()"><i id="playIcon" class="bi bi-play-fill"></i></button>
-                <button class="control-btn" title="Rewind 10s" onclick="skipSeconds(-10)"><i class="bi bi-arrow-counterclockwise"></i></button>
-                <button class="control-btn" title="Forward 10s" onclick="skipSeconds(10)"><i class="bi bi-arrow-clockwise"></i></button>
-                
-                <span id="currentTime" class="time-display">0:00</span>
-                <input type="range" id="seekBar" class="seek-bar" value="0" max="100" oninput="seekVideo(this.value)">
-                <span id="durationTime" class="time-display">0:00</span>
+            <!-- Bottom Details & Timeline Bar -->
+            <div class="player-info-section">
+                <div class="watching-tag">You're watching</div>
+                <!-- Automatically updated via YouTube API -->
+                <div class="video-main-title" id="videoTitleDisplay">Loading video title...</div>
+                <div class="video-sub-info">Combined Mathematics</div>
 
-                <!-- Playback Speed Option -->
-                <select id="speedSelect" class="speed-select" onchange="changeSpeed(this.value)" title="Playback Speed">
-                    <option value="0.5">0.5x</option>
-                    <option value="0.75">0.75x</option>
-                    <option value="1" selected>1.0x</option>
-                    <option value="1.25">1.25x</option>
-                    <option value="1.5">1.5x</option>
-                    <option value="2">2.0x</option>
-                </select>
+                <div class="timeline-container">
+                    <div class="timeline-header">
+                        <div>
+                            <span id="currentTime" class="time-display">0:00</span>
+                            <span class="time-display text-muted" id="durationSeparator">/</span>
+                            <span id="durationTime" class="time-display text-muted">0:00</span>
+                        </div>
+                        <!-- Dynamic Live Button (Visible ONLY in Live Video) -->
+                        <button id="liveBtn" class="live-btn d-none" onclick="goLiveEdge()">
+                            <span class="dot"></span> LIVE
+                        </button>
+                    </div>
 
-                <!-- Quality Status Indicator -->
-                <span id="qualityLabel" class="quality-badge" title="Current Quality">Auto</span>
-
-                <button class="control-btn" title="Mute/Unmute" onclick="toggleMute()"><i id="muteIcon" class="bi bi-volume-up-fill"></i></button>
-                <button class="control-btn" title="Full Screen" onclick="toggleCustomFullScreen()"><i class="bi bi-fullscreen"></i></button>
+                    <input type="range" id="seekBar" class="seek-bar" value="0" max="100" oninput="seekVideo(this.value)">
+                </div>
             </div>
         </div>
 
@@ -277,9 +465,13 @@
         const urlParams = new URLSearchParams(window.location.search);
         const videoId = urlParams.get('v');
         const zoomUrl = urlParams.get('zoom');
+        
+        // Check URL parameters for Live type
+        const isLiveType = urlParams.get('type') === 'live' || urlParams.get('isLive') === 'true';
 
         let player;
         let isMuted = false;
+        let isLiveStream = false;
 
         if (zoomUrl) {
             document.getElementById('videoSection').classList.add('d-none');
@@ -313,11 +505,37 @@
             });
         }
 
+        function updateVideoTitle() {
+            if (!player || !player.getVideoData) return;
+            const videoData = player.getVideoData();
+            if (videoData && videoData.title) {
+                document.getElementById('videoTitleDisplay').innerText = videoData.title;
+            }
+        }
+
         function onPlayerReady(event) {
             if (player.unloadModule) {
                 player.unloadModule('captions');
                 player.unloadModule('cc');
             }
+
+            // Fetch and set YouTube Video Title
+            updateVideoTitle();
+
+            // Detect Live Stream from URL or YouTube Data
+            const videoData = player.getVideoData();
+            isLiveStream = isLiveType || (videoData && videoData.isLive);
+
+            if (isLiveStream) {
+                document.getElementById('durationTime').classList.add('d-none');
+                document.getElementById('durationSeparator').classList.add('d-none');
+                document.getElementById('liveBtn').classList.remove('d-none');
+            } else {
+                document.getElementById('durationTime').classList.remove('d-none');
+                document.getElementById('durationSeparator').classList.remove('d-none');
+                document.getElementById('liveBtn').classList.add('d-none');
+            }
+
             updateTimer();
             setInterval(updateTimer, 500);
             updateQualityLabel();
@@ -331,6 +549,7 @@
                     player.unloadModule('captions');
                 }
                 updateQualityLabel();
+                updateVideoTitle();
             } else {
                 playIcon.className = 'bi bi-play-fill';
             }
@@ -356,6 +575,14 @@
             if (newTime > duration) newTime = duration;
 
             player.seekTo(newTime, true);
+        }
+
+        /* Seek direct to Live Edge */
+        function goLiveEdge() {
+            if (!player || !isLiveStream) return;
+            const duration = player.getDuration();
+            player.seekTo(duration, true);
+            player.playVideo();
         }
 
         /* Playback Speed Controller */
@@ -409,10 +636,25 @@
             const duration = player.getDuration() || 0;
 
             document.getElementById('currentTime').innerText = formatTime(currentTime);
-            document.getElementById('durationTime').innerText = formatTime(duration);
-            
-            if (duration > 0) {
-                document.getElementById('seekBar').value = (currentTime / duration) * 100;
+
+            if (isLiveStream) {
+                const liveBtn = document.getElementById('liveBtn');
+                const LIVE_THRESHOLD = 12; // 12 seconds tolerance for live edge
+
+                if (duration > 0) {
+                    document.getElementById('seekBar').value = (currentTime / duration) * 100;
+                }
+
+                if (duration - currentTime <= LIVE_THRESHOLD) {
+                    liveBtn.classList.add('is-live');
+                } else {
+                    liveBtn.classList.remove('is-live');
+                }
+            } else {
+                document.getElementById('durationTime').innerText = formatTime(duration);
+                if (duration > 0) {
+                    document.getElementById('seekBar').value = (currentTime / duration) * 100;
+                }
             }
         }
 
