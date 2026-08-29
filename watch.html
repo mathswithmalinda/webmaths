@@ -88,6 +88,20 @@
             flex-direction: column;
         }
 
+        /* Auto-Hide Animation Styles */
+        .top-controls-bar, .center-controls {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hide-controls .top-controls-bar,
+        .hide-controls .center-controls {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
         /* Top Bar Overlay inside Video Frame */
         .top-controls-bar {
             position: absolute;
@@ -417,7 +431,7 @@
                 </div>
 
                 <!-- Full Shield overlay prevents clicking YT UI -->
-                <div class="full-shield" onclick="togglePlay()"></div>
+                <div class="full-shield" onclick="handleWrapperClick()"></div>
                 
                 <!-- YT Player Frame -->
                 <div id="ytPlayer"></div>
@@ -426,7 +440,6 @@
             <!-- Bottom Details & Timeline Bar -->
             <div class="player-info-section">
                 <div class="watching-tag">You're watching</div>
-                <!-- Automatically updated via YouTube API -->
                 <div class="video-main-title" id="videoTitleDisplay">Loading video title...</div>
                 <div class="video-sub-info">Combined Mathematics</div>
 
@@ -472,6 +485,7 @@
         let player;
         let isMuted = false;
         let isLiveStream = false;
+        let hideControlsTimeout;
 
         if (zoomUrl) {
             document.getElementById('videoSection').classList.add('d-none');
@@ -519,7 +533,6 @@
                 player.unloadModule('cc');
             }
 
-            // Fetch and set YouTube Video Title
             updateVideoTitle();
 
             // Detect Live Stream from URL or YouTube Data
@@ -539,6 +552,7 @@
             updateTimer();
             setInterval(updateTimer, 500);
             updateQualityLabel();
+            resetHideControlsTimer();
         }
 
         function onPlayerStateChange(event) {
@@ -550,8 +564,10 @@
                 }
                 updateQualityLabel();
                 updateVideoTitle();
+                resetHideControlsTimer();
             } else {
                 playIcon.className = 'bi bi-play-fill';
+                showControls();
             }
         }
 
@@ -564,6 +580,34 @@
             }
         }
 
+        /* Auto Hide Controls Implementation */
+        const videoWrapper = document.getElementById('videoWrapper');
+
+        function showControls() {
+            videoWrapper.classList.remove('hide-controls');
+            resetHideControlsTimer();
+        }
+
+        function resetHideControlsTimer() {
+            clearTimeout(hideControlsTimeout);
+            if (player && player.getPlayerState && player.getPlayerState() === YT.PlayerState.PLAYING) {
+                hideControlsTimeout = setTimeout(() => {
+                    videoWrapper.classList.add('hide-controls');
+                }, 3000); // 3 seconds delay
+            }
+        }
+
+        function handleWrapperClick() {
+            if (videoWrapper.classList.contains('hide-controls')) {
+                showControls();
+            } else {
+                togglePlay();
+            }
+        }
+
+        videoWrapper.addEventListener('mousemove', showControls);
+        videoWrapper.addEventListener('touchstart', showControls, {passive: true});
+
         /* 10 Seconds Forward / Rewind Functionality */
         function skipSeconds(seconds) {
             if (!player || !player.getCurrentTime) return;
@@ -575,6 +619,7 @@
             if (newTime > duration) newTime = duration;
 
             player.seekTo(newTime, true);
+            showControls();
         }
 
         /* Seek direct to Live Edge */
@@ -589,6 +634,7 @@
         function changeSpeed(speed) {
             if (!player || !player.setPlaybackRate) return;
             player.setPlaybackRate(parseFloat(speed));
+            showControls();
         }
 
         /* Video Quality Status Handler */
@@ -615,6 +661,7 @@
             const duration = player.getDuration();
             const targetTime = (value / 100) * duration;
             player.seekTo(targetTime, true);
+            showControls();
         }
 
         function toggleMute() {
@@ -628,6 +675,7 @@
                 muteIcon.className = 'bi bi-volume-mute-fill';
             }
             isMuted = !isMuted;
+            showControls();
         }
 
         function updateTimer() {
@@ -639,7 +687,7 @@
 
             if (isLiveStream) {
                 const liveBtn = document.getElementById('liveBtn');
-                const LIVE_THRESHOLD = 12; // 12 seconds tolerance for live edge
+                const LIVE_THRESHOLD = 12;
 
                 if (duration > 0) {
                     document.getElementById('seekBar').value = (currentTime / duration) * 100;
@@ -664,14 +712,14 @@
             return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Fullscreen Toggle Supporting Mobile (Safari / Chrome)
+        // Fullscreen Toggle Supporting Mobile
         function toggleCustomFullScreen() {
             const container = document.getElementById('videoSection');
 
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 if (container.requestFullscreen) {
                     container.requestFullscreen();
-                } else if (container.webkitRequestFullscreen) { /* iOS / Safari */
+                } else if (container.webkitRequestFullscreen) {
                     container.webkitRequestFullscreen();
                 }
             } else {
@@ -681,6 +729,7 @@
                     document.webkitExitFullscreen();
                 }
             }
+            showControls();
         }
 
         // Watermark Movement
