@@ -42,13 +42,10 @@
         <div id="section-students" class="space-y-6">
             <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl flex flex-col md:flex-row justify-between items-center gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold text-white">Student & Content Management</h2>
-                    <p class="text-slate-400 text-sm">Add students, add videos with access ticks, and manage accounts.</p>
+                    <h2 class="text-2xl font-bold text-white">Student Management</h2>
+                    <p class="text-slate-400 text-sm">Add students and manage user accounts.</p>
                 </div>
                 <div class="flex gap-3 w-full md:w-auto">
-                    <button onclick="openModal('addVideoModal')" class="flex-1 md:flex-none px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg">
-                        <i class="fa-solid fa-video"></i> Add Video
-                    </button>
                     <button onclick="openModal('addStudentModal')" class="flex-1 md:flex-none px-5 py-3 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-xl flex items-center justify-center gap-2 transition shadow-lg shadow-cyan-500/20">
                         <i class="fa-solid fa-user-plus"></i> Add Student
                     </button>
@@ -271,51 +268,6 @@
         </div>
     </div>
 
-    <!-- MODAL 2: ADD VIDEO -->
-    <div id="addVideoModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
-        <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
-            <h3 class="text-xl font-bold text-white">Add New Class Video</h3>
-            <form id="addVideoForm" onsubmit="saveVideo(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">TARGET GRADE</label>
-                    <select id="videoGrade" required class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
-                        <option value="grade06">Grade 6</option>
-                        <option value="grade07">Grade 7</option>
-                        <option value="grade08">Grade 8</option>
-                        <option value="grade09">Grade 9</option>
-                        <option value="grade10">Grade 10</option>
-                        <option value="grade11">Grade 11</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">LESSON TITLE</label>
-                    <input type="text" id="videoTitle" required placeholder="e.g. Day 01 Theory Class" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">YOUTUBE / MEDIA LINK</label>
-                    <input type="text" id="videoUrl" required placeholder="https://www.youtube.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-white">
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-2">ACCESS TYPE (TICK OPTIONS)</label>
-                    <div class="flex gap-4 bg-slate-900 p-3 rounded-xl border border-slate-700">
-                        <label class="flex items-center text-sm gap-2 text-slate-300 cursor-pointer">
-                            <input type="checkbox" id="videoTypeTheory" checked class="accent-cyan-500 w-4 h-4"> Theory
-                        </label>
-                        <label class="flex items-center text-sm gap-2 text-slate-300 cursor-pointer">
-                            <input type="checkbox" id="videoTypePaper" checked class="accent-cyan-500 w-4 h-4"> Paper Class
-                        </label>
-                    </div>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4">
-                    <button type="button" onclick="closeModal('addVideoModal')" class="px-4 py-2 bg-slate-700 text-slate-300 rounded-xl">Cancel</button>
-                    <button type="submit" id="btnSaveVideo" class="px-5 py-2 bg-indigo-500 hover:bg-indigo-600 text-white font-bold rounded-xl disabled:opacity-50">Save Video</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- MODAL 3: EDIT STUDENT -->
     <div id="editStudentModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center hidden z-50 p-4">
         <div class="bg-slate-800 border border-slate-700 w-full max-w-md rounded-2xl p-6 shadow-2xl space-y-4">
@@ -419,12 +371,16 @@
             
             if (hasActiveAccess) {
                 if (confirm(`Remove temporary access for ${classId}?`)) {
-                    usersRef.child(`${classId}/tempAccessUntil`).remove().finally(() => { if (btnElem) btnElem.disabled = false; });
+                    usersRef.child(`${classId}/tempAccessUntil`).remove().then(() => {
+                        alert(`Temporary access removed for ${classId}`);
+                    }).finally(() => { if (btnElem) btnElem.disabled = false; });
                 } else {
                     if (btnElem) btnElem.disabled = false;
                 }
             } else {
-                usersRef.child(`${classId}/tempAccessUntil`).set(now + (7 * 86400000)).finally(() => { if (btnElem) btnElem.disabled = false; });
+                usersRef.child(`${classId}/tempAccessUntil`).set(now + (7 * 86400000)).then(() => {
+                    alert(`7 Days Pass granted for ${classId}`);
+                }).finally(() => { if (btnElem) btnElem.disabled = false; });
             }
         }
 
@@ -508,38 +464,6 @@
             });
         }
 
-        function saveVideo(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSaveVideo');
-            btn.disabled = true;
-
-            const grade = document.getElementById('videoGrade').value;
-            const title = document.getElementById('videoTitle').value.trim();
-            const url = document.getElementById('videoUrl').value.trim();
-            const isTheory = document.getElementById('videoTypeTheory').checked;
-            const isPaper = document.getElementById('videoTypePaper').checked;
-
-            let category = "both";
-            if (isTheory && !isPaper) category = "theory";
-            else if (!isTheory && isPaper) category = "paper";
-
-            const payload = {
-                title, url, active: true, teacher: "Malinda Sir",
-                category, createdAt: Date.now()
-            };
-
-            db.ref(`grades/${grade}`).push(payload, (error) => {
-                btn.disabled = false;
-                if (!error) {
-                    alert("✅ Video Added Successfully!");
-                    closeModal('addVideoModal');
-                    document.getElementById('addVideoForm').reset();
-                } else {
-                    alert(`Failed to add video: ${error.message}`);
-                }
-            });
-        }
-
         function toggleBlockStatus(classId, currentStatus) {
             usersRef.child(classId).update({ status: currentStatus === 'blocked' ? 'active' : 'blocked' });
         }
@@ -551,18 +475,27 @@
         function togglePayment(classId, isPaid, checkboxElem) {
             if(checkboxElem) checkboxElem.disabled = true;
             const monthKey = getCurrentMonthKey();
+            
             usersRef.child(`${classId}/payments/${monthKey}`).set({
                 status: isPaid ? 'paid' : 'unpaid',
                 paidAt: new Date().toISOString().split('T')[0],
                 updatedBy: 'admin'
             }).then(() => {
+                const notifRef = db.ref(`notifications/students/${classId}`);
                 if (isPaid) {
-                    db.ref(`notifications/students/${classId}`).push({
+                    notifRef.push({
                         title: "Payment Confirmed! ✅",
                         message: `${monthKey} මාසය සඳහා පන්ති ගාස්තු ගෙවීම තහවුරු කරන ලදී.`,
                         createdAt: Date.now()
                     });
+                    alert(`✅ Payment confirmed & notification sent to ${classId}!`);
+                } else {
+                    notifRef.remove();
+                    alert(`⚠️ Payment marked as UNPAID for ${classId}! Notifications cleared.`);
                 }
+            }).catch((err) => {
+                alert(`Error updating payment: ${err.message}`);
+                if(checkboxElem) checkboxElem.checked = !isPaid;
             }).finally(() => {
                 if(checkboxElem) checkboxElem.disabled = false;
             });
@@ -614,6 +547,7 @@
                 if (gradeFilter !== 'ALL' && String(s.grade) !== gradeFilter) return;
                 if (search && !(s.classId || key).toLowerCase().includes(search) && !(s.name || '').toLowerCase().includes(search)) return;
 
+                const targetId = s.classId || key;
                 const isPaid = s.payments && s.payments[monthKey] && s.payments[monthKey].status === 'paid';
                 const isLocked = isStudentLocked(s, isPaid);
                 const hasTempAccess = s.tempAccessUntil && s.tempAccessUntil > now;
@@ -628,15 +562,15 @@
                 // Desktop Table View
                 tbody.innerHTML += `
                     <tr class="border-b border-slate-700/50 hover:bg-slate-700/30">
-                        <td class="p-4 font-mono text-cyan-400">${s.classId || key}</td>
+                        <td class="p-4 font-mono text-cyan-400">${targetId}</td>
                         <td class="p-4">${s.name || 'N/A'}</td>
                         <td class="p-4">${s.institute} (Gr. ${s.grade || '-'})</td>
                         <td class="p-4 text-xs">Theory: ${s.subCourses?.theory ? 'Yes':'No'} | Paper: ${s.subCourses?.paper ? 'Yes':'No'}</td>
                         <td class="p-4">${statusHTML}</td>
                         <td class="p-4">${isPaid ? `<span class="text-emerald-400 font-bold">PAID</span>` : `<span class="text-red-400 font-bold">NOT PAID</span>`}</td>
-                        <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked, this)" class="w-6 h-6 accent-cyan-500 cursor-pointer"></td>
+                        <td class="p-4 text-center"><input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${targetId}', this.checked, this)" class="w-6 h-6 accent-cyan-500 cursor-pointer"></td>
                         <td class="p-4 text-center">
-                            <button onclick="toggleTempAccess('${s.classId || key}', ${s.tempAccessUntil || 0}, this)" class="px-3 py-1.5 border text-xs font-semibold rounded-lg ${tempBtnClass} disabled:opacity-50">
+                            <button onclick="toggleTempAccess('${targetId}', ${s.tempAccessUntil || 0}, this)" class="px-3 py-1.5 border text-xs font-semibold rounded-lg ${tempBtnClass} disabled:opacity-50">
                                 ${tempBtnText}
                             </button>
                         </td>
@@ -647,7 +581,7 @@
                     <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 space-y-3 shadow-md">
                         <div class="flex justify-between items-start border-b border-slate-700/60 pb-2">
                             <div>
-                                <span class="text-xs font-mono text-cyan-400 font-bold">${s.classId || key}</span>
+                                <span class="text-xs font-mono text-cyan-400 font-bold">${targetId}</span>
                                 <h3 class="text-base font-bold text-white">${s.name || 'N/A'}</h3>
                                 <p class="text-xs text-slate-400">${s.institute} - Grade ${s.grade || '-'}</p>
                             </div>
@@ -665,12 +599,12 @@
                             </div>
                             <label class="flex items-center gap-2 cursor-pointer text-xs text-cyan-400 font-semibold">
                                 Toggle Pay
-                                <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${s.classId || key}', this.checked, this)" class="w-5 h-5 accent-cyan-500">
+                                <input type="checkbox" ${isPaid ? 'checked' : ''} onchange="togglePayment('${targetId}', this.checked, this)" class="w-5 h-5 accent-cyan-500">
                             </label>
                         </div>
 
                         <div class="pt-1">
-                            <button onclick="toggleTempAccess('${s.classId || key}', ${s.tempAccessUntil || 0}, this)" class="w-full py-2 border text-xs font-semibold rounded-lg ${tempBtnClass} disabled:opacity-50">
+                            <button onclick="toggleTempAccess('${targetId}', ${s.tempAccessUntil || 0}, this)" class="w-full py-2 border text-xs font-semibold rounded-lg ${tempBtnClass} disabled:opacity-50">
                                 ${tempBtnText}
                             </button>
                         </div>
@@ -747,6 +681,12 @@
             };
 
             ['global','grade6','grade7','grade8','grade9','grade10','grade11'].forEach(g => data[g] && processGroup(data[g], `notifications/${g}`, g));
+            
+            if (data.students) {
+                Object.keys(data.students).forEach(stId => {
+                    processGroup(data.students[stId], `notifications/students/${stId}`, `Student: ${stId}`);
+                });
+            }
         });
 
         function triggerYearPast() {
